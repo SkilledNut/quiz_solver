@@ -394,6 +394,34 @@ async function loadShortcuts() {
 const openShortcutSettings = () => chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
 
 // ------------------------------------------------------------------ main
+async function initDarkMode() {
+  const darkToggle = document.getElementById('darkModeToggle');
+  const satToggle = document.getElementById('saturationToggle');
+  const darkView = document.getElementById('darkmodeView');
+  const quizView = document.getElementById('quizView');
+  if (!darkToggle || !satToggle || !darkView || !quizView) return;
+
+  satToggle.checked = false;
+  darkView.hidden = false;
+  quizView.hidden = true;
+
+  try {
+    const res = await send({ type: 'popup:rdmState' });
+    if (res && typeof res.on === 'boolean') darkToggle.checked = res.on;
+  } catch { /* ignore */ }
+
+  darkToggle.addEventListener('change', () => {
+    send({ type: 'popup:rdmToggle', on: darkToggle.checked }).catch(() => {});
+  });
+
+  satToggle.addEventListener('change', () => {
+    const on = satToggle.checked;
+    darkView.hidden = on;
+    quizView.hidden = !on;
+    send({ type: 'popup:quizSolverToggle', on }).catch(() => {});
+  });
+}
+
 async function main() {
   [settings, contexts] = await Promise.all([getSettings(), getContexts()]);
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -428,6 +456,8 @@ async function main() {
     const r = await send({ type: 'popup:highlight' });
     status(r && !r.error ? `Detected ${r.count} question(s) — outlined on the page for 8 s.` : '✗ ' + ((r && r.error) || 'Failed'), r && !r.error ? '' : 'err');
   });
+
+  await initDarkMode();
 
   // flush pending saves when the popup closes
   addEventListener('pagehide', () => { saveSettings(settings); saveContexts(contexts); });

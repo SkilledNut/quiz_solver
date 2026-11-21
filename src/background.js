@@ -9,6 +9,60 @@ import { solveWithAlgorithm } from './lib/algorithm.js';
 import { formatAnswers, optionLabel, stripEnumerators } from './lib/prompt.js';
 import * as History from './lib/history.js';
 
+// ------------------------------------------------------------------ RealDarkMode
+let darkModeEnabled = null;
+let quizSolverEnabled = false;
+
+async function setQuizSolverEnabled(on) {
+  quizSolverEnabled = !!on;
+  try { await chrome.storage.local.set({ rdmQuizSolverEnabled: quizSolverEnabled }); } catch { /* ignore */ }
+}
+
+chrome.storage.local.get('rdmQuizSolverEnabled').then((r) => {
+  quizSolverEnabled = !!(r && r.rdmQuizSolverEnabled);
+}).catch(() => {});
+
+async function getDarkModeState() {
+  if (darkModeEnabled !== null && darkModeEnabled !== undefined) return darkModeEnabled;
+  const { rdmState } = await chrome.storage.local.get('rdmState');
+  darkModeEnabled = !!(rdmState && rdmState.on);
+  return darkModeEnabled;
+}
+
+async function setDarkMode(on) {
+  darkModeEnabled = !!on;
+  await chrome.storage.local.set({ rdmState: { on: darkModeEnabled } });
+  // Notify all tabs to apply/remove the filter
+  try {
+    const tabs = await chrome.tabs.query({});
+    await Promise.all(tabs.map((t) =>
+      chrome.tabs.sendMessage(t.id, { type: 'rdm:set', on: darkModeEnabled }).catch(() => {})
+    ));
+  } catch { /* ignore */ }
+}
+
+// Apply dark mode to new / updated tabs when globally enabled
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && tab.url && !tab.url.startsWith('chrome://') && !tab.url.startsWith('chrome-extension://')) {
+    getDarkModeState().then((on) => {
+      if (on) chrome.tabs.sendMessage(tabId, { type: 'rdm:set', on: true }).catch(() => {});
+    });
+  }
+});
+
+chrome.tabs.onCreated.addListener((tab) => {
+  getDarkModeState().then((on) => {
+    if (on) {
+      chrome.tabs.onUpdated.addListener(function waiter(tId, info) {
+        if (tId === tab.id && info.status === 'complete') {
+          chrome.tabs.sendMessage(tId, { type: 'rdm:set', on: true }).catch(() => {});
+          chrome.tabs.onUpdated.removeListener(waiter);
+        }
+      });
+    }
+  });
+});
+
 const busy = new Set();      // tabs currently solving
 const manualTimers = new Map();
 
@@ -458,6 +512,7 @@ async function activeTabId() {
 }
 
 async function runCommand(command, tabId) {
+  if (!quizSolverEnabled) return { ok: false, error: 'Quiz Solver is disabled' };
   tabId = tabId ?? await activeTabId();
   if (tabId == null) return { ok: false };
   try {
@@ -483,7 +538,40 @@ chrome.commands.onCommand.addListener((command, tab) => { runCommand(command, ta
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return false;
+  if (msg.type === 'rdm:getState') {
+    getDarkModeState().then((on) => sendResponse({ on })).catch(() => sendResponse({ on: false }));
+    return true;
+  }
+  if (msg.type === 'rdm:toggle') {
+    getDarkModeState().then(async (on) => {
+      await setDarkMode(!on);
+      sendResponse({ on: !on });
+    }).catch((e) => sendResponse({ error: e.message || String(e) }));
+    return true;
+  }
+  if (msg.type === 'popup:rdmToggle') {
+    const next = typeof msg.on === 'boolean' ? msg.on : null;
+    getDarkModeState().then(async (on) => {
+      const target = next !== null ? next : !on;
+      await setDarkMode(target);
+      sendResponse({ on: target });
+    }).catch((e) => sendResponse({ error: e.message || String(e) }));
+    return true;
+  }
+  if (msg.type === 'popup:rdmState') {
+    getDarkModeState().then((on) => sendResponse({ on })).catch(() => sendResponse({ on: false }));
+    return true;
+  }
+  if (msg.type === 'popup:quizSolverToggle') {
+    setQuizSolverEnabled(!!msg.on).then(() => sendResponse({ ok: true, enabled: quizSolverEnabled })).catch((e) => sendResponse({ ok: false, error: e.message || String(e) }));
+    return true;
+  }
+  if (msg.type === 'quizSolver:get') {
+    sendResponse({ enabled: quizSolverEnabled });
+    return false;
+  }
   if (msg.type === 'qs:manual-change') {
+    if (!quizSolverEnabled) return false;
     const tabId = sender.tab && sender.tab.id;
     if (tabId == null) return false;
     clearTimeout(manualTimers.get(tabId));
@@ -491,6 +579,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return false;
   }
   if (msg.type === 'qs:toggle-label') { // in-page Alt+Shift+H
+    if (!quizSolverEnabled) return false;
     if (sender.tab && sender.tab.id != null) toggleLabel(sender.tab.id).catch(() => {});
     return false;
   }
@@ -504,6 +593,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     'popup:draft': () => getDraft(),
     'popup:setDraft': async () => { await setDraft(msg.draft || { question: '', options: [] }); return { ok: true }; },
     'popup:highlight': async () => {
+      if (!quizSolverEnabled) return { count: 0 };
       await inject(msg.tabId);
       const r = await inFrames(msg.tabId, () => (globalThis.__QS ? globalThis.__QS.highlight(true) : 0));
       return { count: r.reduce((a, x) => a + (x.result || 0), 0) };
