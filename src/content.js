@@ -1259,7 +1259,7 @@
     (document.head || document.documentElement).appendChild(st);
   }
   function flashEl(el) {
-    if (!el || !el.setAttribute) return;
+    if (!el || !el.style) return;
     ensureStyle();
     el.setAttribute("data-qs-flash", "");
     setTimeout(() => el.removeAttribute("data-qs-flash"), 1400);

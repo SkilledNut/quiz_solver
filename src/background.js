@@ -196,7 +196,7 @@ async function restore(tabId, state, settings) {
 
 async function notify(tabId, msg, type = 'info', opts = {}) {
   const settings = await getSettings();
-  if (!settings.notifications && type !== 'err' && !opts.always) return;
+  if (!settings.notifications && type !== 'err') return;
   try {
     await chrome.scripting.executeScript({
       target: { tabId, frameIds: [0] },
@@ -234,10 +234,16 @@ function labelItem(n, q, sel, warn) {
 // Puts the answers of the last run into the box (used after a reload / when the box was never shown).
 async function labelFromLastRun(tabId) {
   const { lastRun } = await chrome.storage.local.get('lastRun');
+  const settings = await getSettings();
   if (!lastRun || !lastRun.questions || !lastRun.questions.length) return { ok: false, error: 'No answers yet' };
   await inject(tabId);
   const items = lastRun.questions.map((q, i) => labelItem(i + 1, q, q.answer, q.answer && q.answer.length ? '' : 'unparsed'));
-  await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, func: (it) => globalThis.__QS && globalThis.__QS.label(it, {}), args: [items] });
+  const transparency = settings.discreetTransparency != null ? Math.max(0, Math.min(90, settings.discreetTransparency)) : 50;
+  const labelOpts = {
+    discreet: !!settings.discreetMode,
+    opacity: 1 - transparency / 100
+  };
+  await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, func: (it, o) => globalThis.__QS && globalThis.__QS.label(it, o), args: [items, labelOpts] });
   return { ok: true, state: 'shown' };
 }
 
