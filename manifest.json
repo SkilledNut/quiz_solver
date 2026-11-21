@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Quiz Solver",
+  "version": "1.1.0",
+  "description": "Detects quiz questions on the page and selects the answers using your knowledge base (offline algorithm) or any LLM.",
+  "minimum_chrome_version": "116",
+  "permissions": ["storage", "unlimitedStorage", "scripting", "activeTab"],
+  "optional_permissions": ["debugger"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "src/background.js", "type": "module" },
+  "action": {
+    "default_title": "Quiz Solver",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "commands": {
+    "manual-question": {
+      "suggested_key": { "default": "Alt+Shift+Q" },
+      "description": "Manual: selected text is the question (starts a new question)"
+    },
+    "manual-answer": {
+      "suggested_key": { "default": "Alt+Shift+O" },
+      "description": "Manual: add selected text as an answer option"
+    },
+    "manual-solve-single": {
+      "suggested_key": { "default": "Alt+Shift+S" },
+      "description": "Manual: solve as single choice"
+    },
+    "manual-solve-multi": {
+      "suggested_key": { "default": "Alt+Shift+M" },
+      "description": "Manual: solve as multiple choice"
+    },
+    "solve-quiz": { "description": "Auto: detect + select answers on the page" },
+    "undo-answers": { "description": "Auto: roll back answers one step (undo)" },
+    "redo-answers": { "description": "Auto: redo (step forward in answer history)" },
+    "reapply-answers": { "description": "Auto: re-apply the last solved answers" }
+  }
+}

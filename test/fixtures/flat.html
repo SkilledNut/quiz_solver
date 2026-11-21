@@ -1,0 +1,58 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Flat / table / shadow / hidden layouts</title>
+<style>
+  .fancy input{position:absolute;opacity:0;width:0;height:0}
+  .fancy label{display:block;padding:6px 10px;border:1px solid #ccc;margin:3px 0;cursor:pointer}
+  .fancy input:checked + span{font-weight:bold}
+</style></head>
+<body>
+<p>Answer every question. Good luck!</p>
+<form id="f">
+  <p><b>1.</b> What is the capital of France?</p>
+  <input type="radio" name="cap" value="a"> Berlin<br>
+  <input type="radio" name="cap" value="b"> Paris<br>
+  <input type="radio" name="cap" value="c"> Rome<br>
+
+  <p><b>2.</b> Which are programming languages?</p>
+  <input type="checkbox" value="1"> Python<br>
+  <input type="checkbox" value="2"> Banana<br>
+  <input type="checkbox" value="3"> Rust<br>
+
+  <p><b>3.</b> Which gas do plants absorb?</p>
+  <input type="checkbox" value="1"> Oxygen<br>
+  <input type="checkbox" value="2"> Carbon dioxide<br>
+</form>
+
+<div class="question fancy">
+  <div class="question-text">4. Pick the largest ocean.</div>
+  <label><input type="radio" name="ocean"><span>Atlantic</span></label>
+  <label><input type="radio" name="ocean"><span>Pacific</span></label>
+  <label><input type="radio" name="ocean"><span>Indian</span></label>
+</div>
+
+<h3>5. Rate the statements</h3>
+<table>
+  <thead><tr><th></th><th>Agree</th><th>Neutral</th><th>Disagree</th></tr></thead>
+  <tbody>
+    <tr><td>The sun is a star</td><td><input type="radio" name="r1"></td><td><input type="radio" name="r1"></td><td><input type="radio" name="r1"></td></tr>
+    <tr><td>The moon is a planet</td><td><input type="radio" name="r2"></td><td><input type="radio" name="r2"></td><td><input type="radio" name="r2"></td></tr>
+  </tbody>
+</table>
+
+<div style="display:none" class="question">
+  <p>Hidden page question?</p>
+  <label><input type="radio" name="hid"> X</label><label><input type="radio" name="hid"> Y</label>
+</div>
+
+<quiz-card></quiz-card>
+<script>
+  customElements.define('quiz-card', class extends HTMLElement {
+    connectedCallback() {
+      const r = this.attachShadow({ mode: 'open' });
+      r.innerHTML = '<div class="question"><p>6. Shadow DOM: 2 + 3 = ?</p>' +
+        '<label><input type="radio" name="s"> 4</label><label><input type="radio" name="s"> 5</label><label><input type="radio" name="s"> 6</label></div>';
+    }
+  });
+</script>
+<script src="/src/content.js"></script>
+</body></html>

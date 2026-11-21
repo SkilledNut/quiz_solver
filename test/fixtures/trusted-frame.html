@@ -1,0 +1,21 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>frame</title>
+<style>
+  body { font: 15px system-ui, sans-serif; margin: 12px; }
+  [role=checkbox] { display: inline-block; width: 16px; height: 16px; border: 2px solid #555; border-radius: 3px; vertical-align: middle; cursor: pointer; }
+  [role=checkbox][aria-checked=true] { background: #16a34a; }
+</style></head>
+<body>
+  <div role="heading">4. Which are even numbers?</div>
+  <div role="group">
+    <div><span role="checkbox" aria-checked="false"></span> 2</div>
+    <div><span role="checkbox" aria-checked="false"></span> 3</div>
+    <div><span role="checkbox" aria-checked="false"></span> 8</div>
+  </div>
+<script>
+  document.addEventListener('click', (e) => {
+    const c = e.target.closest('[role=checkbox]');
+    if (c && e.isTrusted) c.setAttribute('aria-checked', String(c.getAttribute('aria-checked') !== 'true'));
+  });
+</script>
+</body></html>

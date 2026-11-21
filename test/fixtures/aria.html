@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Google-Forms-like (ARIA widgets)</title>
+<style>
+  [role=radio],[role=checkbox]{display:inline-block;width:18px;height:18px;border:2px solid #555;border-radius:50%;cursor:pointer;vertical-align:middle}
+  [role=checkbox]{border-radius:3px}
+  [aria-checked=true]{background:#673ab7}
+  .opt{display:flex;gap:8px;align-items:center;margin:4px 0}
+</style></head>
+<body>
+<h1>Science quiz</h1>
+<div role="list">
+  <div role="listitem" class="item">
+    <div role="heading" aria-level="3" id="t1">Water boils at 100 °C at sea level.<span aria-label="Required question"> *</span></div>
+    <div role="radiogroup" aria-labelledby="t1">
+      <div class="opt"><label><div role="radio" aria-checked="false" data-value="True" aria-label="True"></div></label><span>True</span></div>
+      <div class="opt"><label><div role="radio" aria-checked="false" data-value="False" aria-label="False"></div></label><span>False</span></div>
+    </div>
+  </div>
+  <div role="listitem" class="item">
+    <div role="heading" aria-level="3">Select all prime numbers</div>
+    <div role="list">
+      <div role="listitem"><label class="opt"><div role="checkbox" aria-checked="false"></div><span>2</span></label></div>
+      <div role="listitem"><label class="opt"><div role="checkbox" aria-checked="false"></div><span>4</span></label></div>
+      <div role="listitem"><label class="opt"><div role="checkbox" aria-checked="false"></div><span>7</span></label></div>
+      <div role="listitem"><label class="opt"><div role="checkbox" aria-checked="false"></div><span>9</span></label></div>
+    </div>
+  </div>
+  <div role="listitem" class="item">
+    <div role="heading" aria-level="3">Which planet is called the Red Planet?</div>
+    <div role="listbox" aria-label="planets">
+      <div role="option" aria-selected="false">Venus</div>
+      <div role="option" aria-selected="false">Mars</div>
+      <div role="option" aria-selected="false">Jupiter</div>
+    </div>
+  </div>
+</div>
+<script>
+  // framework-like behaviour: state only changes through (synthetic) mouse interaction
+  document.addEventListener('click', (e) => {
+    const r = e.target.closest('[role=radio]');
+    if (r) {
+      r.closest('[role=radiogroup]').querySelectorAll('[role=radio]').forEach((x) => x.setAttribute('aria-checked', 'false'));
+      r.setAttribute('aria-checked', 'true');
+    }
+    const c = e.target.closest('[role=checkbox]');
+    if (c) c.setAttribute('aria-checked', String(c.getAttribute('aria-checked') !== 'true'));
+    const o = e.target.closest('[role=option]');
+    if (o) { o.parentElement.querySelectorAll('[role=option]').forEach((x) => x.setAttribute('aria-selected', 'false')); o.setAttribute('aria-selected', 'true'); }
+  });
+</script>
+<script src="/src/content.js"></script>
+</body></html>

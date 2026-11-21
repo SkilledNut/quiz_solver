@@ -1,0 +1,50 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Moodle-like quiz</title>
+<style>.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}</style></head>
+<body>
+<nav><label><input type="checkbox" id="navtoggle"> Dark mode</label> <select><option>English</option><option>Slovenščina</option></select></nav>
+<form id="responseform">
+  <div id="q1" class="que multichoice deferredfeedback notyetanswered">
+    <div class="info"><h3 class="no">Question <span class="qno">1</span></h3><div class="state">Not yet answered</div><div class="grade">Marked out of 1.00</div><a href="#">Flag question</a></div>
+    <div class="content"><div class="formulation clearfix">
+      <h4 class="sr-only">Question text</h4>
+      <div class="qtext"><p>Which organelle produces most of the cell's ATP?</p></div>
+      <fieldset class="ablock"><legend class="prompt">Select one:</legend>
+        <div class="answer">
+          <div class="r0"><input type="radio" name="q1:1_answer" value="0" id="q1_a0" aria-labelledby="q1_a0_label"><div class="d-flex" id="q1_a0_label"><span class="answernumber">a. </span><div class="flex-fill">Nucleus</div></div></div>
+          <div class="r1"><input type="radio" name="q1:1_answer" value="1" id="q1_a1" aria-labelledby="q1_a1_label"><div class="d-flex" id="q1_a1_label"><span class="answernumber">b. </span><div class="flex-fill">Mitochondrion</div></div></div>
+          <div class="r0"><input type="radio" name="q1:1_answer" value="2" id="q1_a2" aria-labelledby="q1_a2_label"><div class="d-flex" id="q1_a2_label"><span class="answernumber">c. </span><div class="flex-fill">Ribosome</div></div></div>
+        </div>
+        <div class="sr-only" aria-hidden="true"><input type="radio" name="q1:1_answer" value="-1" id="q1_clear"><label for="q1_clear">Clear my choice</label></div>
+      </fieldset>
+    </div></div>
+  </div>
+
+  <div id="q2" class="que multichoice">
+    <div class="info"><h3 class="no">Question <span class="qno">2</span></h3><div class="state">Not yet answered</div></div>
+    <div class="content"><div class="formulation">
+      <div class="qtext"><p>Which of these animals are mammals?</p></div>
+      <fieldset class="ablock"><legend class="prompt">Select one or more:</legend>
+        <div class="answer">
+          <div class="r0"><input type="checkbox" name="q1:2_choice0" id="q2c0"><label for="q2c0"><span class="answernumber">a. </span>Whale</label></div>
+          <div class="r1"><input type="checkbox" name="q1:2_choice1" id="q2c1"><label for="q2c1"><span class="answernumber">b. </span>Shark</label></div>
+          <div class="r0"><input type="checkbox" name="q1:2_choice2" id="q2c2"><label for="q2c2"><span class="answernumber">c. </span>Dolphin</label></div>
+          <div class="r1"><input type="checkbox" name="q1:2_choice3" id="q2c3"><label for="q2c3"><span class="answernumber">d. </span>Trout</label></div>
+        </div>
+      </fieldset>
+    </div></div>
+  </div>
+
+  <div id="q3" class="que match">
+    <div class="info"><h3 class="no">Question <span class="qno">3</span></h3></div>
+    <div class="content"><div class="formulation">
+      <div class="qtext"><p>Match each organelle with its function.</p></div>
+      <table class="answer"><tbody>
+        <tr class="r0"><td class="text"><p>Ribosome</p></td><td class="control"><select name="q1:3_sub0" id="m0"><option value="0">Choose...</option><option value="1">Protein synthesis</option><option value="2">Photosynthesis</option><option value="3">Energy production</option></select></td></tr>
+        <tr class="r1"><td class="text"><p>Chloroplast</p></td><td class="control"><select name="q1:3_sub1" id="m1"><option value="0">Choose...</option><option value="1">Protein synthesis</option><option value="2">Photosynthesis</option><option value="3">Energy production</option></select></td></tr>
+      </tbody></table>
+    </div></div>
+  </div>
+</form>
+</body></html>
+<script src="/src/content.js"></script>
