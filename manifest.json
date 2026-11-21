@@ -31,6 +31,7 @@
       "suggested_key": { "default": "Alt+Shift+M" },
       "description": "Manual: solve as multiple choice"
     },
+    "toggle-label": { "description": "Show / hide the answers box (also Alt+Shift+H on the page)" },
     "solve-quiz": { "description": "Auto: detect + select answers on the page" },
     "undo-answers": { "description": "Auto: roll back answers one step (undo)" },
     "redo-answers": { "description": "Auto: redo (step forward in answer history)" },

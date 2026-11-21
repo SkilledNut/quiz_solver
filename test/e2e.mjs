@@ -173,6 +173,22 @@ await page.reload();
 r = await popup.evaluate((t) => chrome.runtime.sendMessage({ type: 'popup:showLabel', tabId: t }), tabId);
 lb = await labelState();
 check('label: "Show answers on page" restores it after reload', r && r.ok && lb && lb.visible && lb.items.length >= 3, JSON.stringify(lb));
+await page.bringToFront();
+await page.keyboard.press('Alt+Shift+H');
+await page.waitForTimeout(400);
+lb = await labelState();
+check('label: Alt+Shift+H hides it', lb && !lb.visible, JSON.stringify(lb && lb.visible));
+await page.keyboard.press('Alt+Shift+H');
+await page.waitForTimeout(400);
+lb = await labelState();
+check('label: Alt+Shift+H shows it again', lb && lb.visible, JSON.stringify(lb && lb.visible));
+await page.reload();
+r = await cmd('toggle-label');
+lb = await labelState();
+check('label: toggle command after reload shows last answers', r && r.ok && r.state === 'shown' && lb && lb.visible && lb.items.length >= 3, JSON.stringify(r));
+r = await cmd('toggle-label');
+lb = await labelState();
+check('label: toggle command hides it', r && r.state === 'hidden' && lb && !lb.visible, JSON.stringify(r));
 
 // ---------- ARIA page via extension
 await page.goto(BASE + 'aria.html');

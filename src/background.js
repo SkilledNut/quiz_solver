@@ -173,6 +173,26 @@ function labelItem(n, q, sel, warn) {
   };
 }
 
+// Puts the answers of the last run into the box (used after a reload / when the box was never shown).
+async function labelFromLastRun(tabId) {
+  const { lastRun } = await chrome.storage.local.get('lastRun');
+  if (!lastRun || !lastRun.questions || !lastRun.questions.length) return { ok: false, error: 'No answers yet' };
+  await inject(tabId);
+  const items = lastRun.questions.map((q, i) => labelItem(i + 1, q, q.answer, q.answer && q.answer.length ? '' : 'unparsed'));
+  await chrome.scripting.executeScript({ target: { tabId, frameIds: [0] }, func: (it) => globalThis.__QS && globalThis.__QS.label(it, {}), args: [items] });
+  return { ok: true, state: 'shown' };
+}
+
+// Show / hide the answers box (explicit user action, so it ignores the "answerLabel" option).
+async function toggleLabel(tabId) {
+  await inject(tabId);
+  const [r] = await inFrames(tabId, () => (globalThis.__QS ? globalThis.__QS.labelToggle() : 'empty'), [], [0]);
+  if (r && r.result !== 'empty') return { ok: true, state: r.result };
+  const res = await labelFromLastRun(tabId);
+  if (!res.ok) await notify(tabId, 'No answers to show yet.', 'info', { always: true });
+  return res;
+}
+
 // No badge on the toolbar icon, ever. Clear any left over from older versions.
 chrome.action.setBadgeText({ text: '' }).catch(() => {});
 chrome.tabs.query({}).then((tabs) => tabs.forEach((t) => chrome.action.setBadgeText({ tabId: t.id, text: '' }).catch(() => {}))).catch(() => {});
@@ -450,6 +470,7 @@ async function runCommand(command, tabId) {
       case 'manual-answer': return await manualAnswer(tabId);
       case 'manual-solve-single': return await manualSolve(tabId, 'single');
       case 'manual-solve-multi': return await manualSolve(tabId, 'multi');
+      case 'toggle-label': return await toggleLabel(tabId);
       default: return { ok: false };
     }
   } catch (e) {
@@ -469,20 +490,17 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     manualTimers.set(tabId, setTimeout(() => recordManual(tabId), 400));
     return false;
   }
+  if (msg.type === 'qs:toggle-label') { // in-page Alt+Shift+H
+    if (sender.tab && sender.tab.id != null) toggleLabel(sender.tab.id).catch(() => {});
+    return false;
+  }
   const handlers = {
     'popup:command': () => runCommand(msg.command, msg.tabId),
     'popup:restore': () => restoreIndex(msg.tabId, msg.index),
     'popup:history': async () => History.load(await tabUrl(msg.tabId)),
     'popup:clearHistory': async () => { await History.clear(await tabUrl(msg.tabId)); return { ok: true }; },
     'popup:test': async () => testConnection(resolveLLMConfig(await getSettings())),
-    'popup:showLabel': async () => {
-      const { lastRun } = await chrome.storage.local.get('lastRun');
-      if (!lastRun || !lastRun.questions || !lastRun.questions.length) return { ok: false, error: 'No answers yet' };
-      await inject(msg.tabId);
-      const items = lastRun.questions.map((q, i) => labelItem(i + 1, q, q.answer, q.answer && q.answer.length ? '' : 'unparsed'));
-      await chrome.scripting.executeScript({ target: { tabId: msg.tabId, frameIds: [0] }, func: (it) => globalThis.__QS && globalThis.__QS.label(it, {}), args: [items] });
-      return { ok: true };
-    },
+    'popup:showLabel': () => labelFromLastRun(msg.tabId),
     'popup:draft': () => getDraft(),
     'popup:setDraft': async () => { await setDraft(msg.draft || { question: '', options: [] }); return { ok: true }; },
     'popup:highlight': async () => {

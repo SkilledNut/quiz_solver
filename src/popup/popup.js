@@ -366,9 +366,11 @@ const SHORTCUT_HELP = [
   { name: 'undo-answers', title: 'Undo', detail: 'Steps back in this page’s answer history (also your own manual changes).' },
   { name: 'redo-answers', title: 'Redo', detail: 'Steps forward again after an undo.' },
   { name: 'reapply-answers', title: 'Re-apply solved answers', detail: 'Puts the last solved answers back after you changed them by hand (works after reload too).' },
-  { group: 'Popup / page' },
-  { key: 'click toolbar icon', title: 'Open this popup' },
-  { key: 'Answers box header', title: 'Collapse / expand the Answers box', detail: '✕ closes it; Last run → “Show answers on page” brings it back.' }
+  { group: 'Answers box (bottom right)' },
+  { name: 'toggle-label', fallback: 'Alt+Shift+H', title: 'Show / hide answers box', detail: 'Alt+Shift+H works on pages where the extension already ran. For a key that works everywhere (also after reload), set this command in Chrome. Shows the last answers if the box isn’t there yet.' },
+  { key: 'click box header', title: 'Collapse / expand the box', detail: '✕ closes it.' },
+  { group: 'Popup' },
+  { key: 'click toolbar icon', title: 'Open this popup' }
 ];
 
 async function loadShortcuts() {
@@ -380,7 +382,11 @@ async function loadShortcuts() {
     const key = h.name ? keys[h.name] : h.key;
     const k = el('kbd', { textContent: key || 'not set', className: key ? '' : 'unset' });
     if (!key) { k.title = 'Click to set'; k.addEventListener('click', openShortcutSettings); }
-    const row = el('div', { className: 'sc-row' }, el('div', { className: 'sc-top' }, el('b', { textContent: h.title }), k));
+    const keysBox = el('span', { className: 'sc-keys' });
+    if (h.fallback) keysBox.append(el('kbd', { textContent: h.fallback, title: 'On the page' }));
+    if (!h.fallback || key) keysBox.append(k);
+    else { const set = el('kbd', { textContent: '+ global key', className: 'unset', title: 'Set a Chrome-wide key' }); set.addEventListener('click', openShortcutSettings); keysBox.append(set); }
+    const row = el('div', { className: 'sc-row' }, el('div', { className: 'sc-top' }, el('b', { textContent: h.title }), keysBox));
     if (h.detail) row.append(el('div', { className: 'sc-detail', textContent: h.detail }));
     list.append(row);
   }

@@ -38,6 +38,10 @@ letters and option text, e.g. `1. A,C  Red · Blue`.
 - Questions the extension couldn't select on the page are marked **⚠ not selected**. Questions where the
   model's reply couldn't be read are marked **⚠ unparsed**.
 - Manual-mode answers are added as `M1`, `M2`, ….
+- **Alt+Shift+H** toggles the box on any page where the extension has already run, including when the focus
+  is inside an iframe. For a key that works on every page, including right after a reload, set the Chrome
+  command *Show / hide the answers box* at `chrome://extensions/shortcuts`. If the box isn't on the page yet,
+  toggling it on shows the last answers.
 - Click the header to collapse the box; ✕ closes it.
 - To bring the box back after a page reload: popup → *Last run* → **Show answers on page**.
 - You can turn it off in Options.

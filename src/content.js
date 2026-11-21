@@ -13,7 +13,7 @@
  */
 (() => {
   'use strict';
-  const VERSION = '1.2.0';
+  const VERSION = '1.3.0';
   if (globalThis.__QS && globalThis.__QS.version === VERSION) return;
 
   // ------------------------------------------------------------------ constants
@@ -939,6 +939,23 @@
     return true;
   }
 
+  // 'shown' | 'hidden' | 'empty' (nothing to show yet -> background fills it from the last run)
+  function labelToggle() {
+    if (window !== window.top) return 'empty';
+    if (!labelHost || !labelHost.isConnected || !labelItems.length) return 'empty';
+    const visible = labelHost.style.display !== 'none';
+    labelHost.style.display = visible ? 'none' : '';
+    return visible ? 'hidden' : 'shown';
+  }
+
+  // In-page hotkey Alt+Shift+H (any frame) -> background toggles the box in the top frame.
+  const LABEL_HOTKEY = { code: 'KeyH', alt: true, shift: true };
+  addEventListener('keydown', (e) => {
+    if (e.code !== LABEL_HOTKEY.code || e.altKey !== LABEL_HOTKEY.alt || e.shiftKey !== LABEL_HOTKEY.shift || e.ctrlKey || e.metaKey || e.repeat) return;
+    e.preventDefault();
+    try { if (chrome.runtime && chrome.runtime.id) chrome.runtime.sendMessage({ type: 'qs:toggle-label' }).catch(() => {}); } catch { /* extension reloaded */ }
+  }, true);
+
   // ------------------------------------------------------------------ public API
   function scan(opts = {}) {
     try {
@@ -963,6 +980,7 @@
 
   globalThis.__QS = {
     version: VERSION, scan, getState, setState, plan, clickPoint, memberState, scrollPos, toast, label, highlight,
+    labelToggle,
     labelState: () => ({ visible: !!(labelHost && labelHost.isConnected && labelHost.style.display !== 'none'), items: labelItems }),
     _internals: { optKey, cleanNoise }
   };
