@@ -64,6 +64,7 @@ chrome.tabs.onCreated.addListener((tab) => {
 });
 
 const busy = new Set();      // tabs currently solving
+const IN_PAGE_COMMANDS = new Set(['toggle-label', 'solve-quiz', 'undo-answers', 'redo-answers', 'reapply-answers']);
 const manualTimers = new Map();
 
 // ------------------------------------------------------------------ frame helpers
@@ -206,14 +207,17 @@ async function notify(tabId, msg, type = 'info', opts = {}) {
 }
 
 // Persistent answers box (bottom right). items: [{ n, letters, text, question, warn }]
+// opts.show: always pop the box up (manual solve), regardless of the notification settings.
 async function showLabel(tabId, items, opts = {}) {
   const settings = await getSettings();
-  if (settings.answerLabel === false) return;
+  const { show, ...rest } = opts;
+  // box off or notifications off: fill it silently, Alt+Shift+H brings it up
+  const hidden = !show && (settings.answerLabel === false || !settings.notifications);
   try {
     await chrome.scripting.executeScript({
       target: { tabId, frameIds: [0] },
       func: (it, o) => { if (globalThis.__QS) globalThis.__QS.label(it, o); },
-      args: [items, opts]
+      args: [items, { ...rest, hidden }]
     });
   } catch { /* page not scriptable */ }
 }
@@ -444,7 +448,7 @@ async function manualQuestion(tabId) {
   }
   await setDraft(draft);
   const extra = draft.options.length ? `\n+ ${draft.options.length} answers found in the selection` : '\nNow select each answer + Alt+Shift+O';
-  await notify(tabId, `Question saved: “${draft.question.slice(0, 90)}${draft.question.length > 90 ? '…' : ''}”${extra}`, 'info', { duration: 4000, always: true });
+  await notify(tabId, `Question saved: “${draft.question.slice(0, 90)}${draft.question.length > 90 ? '…' : ''}”${extra}`, 'info', { duration: 4000 });
   return { ok: true, draft };
 }
 
@@ -459,7 +463,7 @@ async function manualAnswer(tabId) {
   await setDraft(draft);
   const last = draft.options.length - 1;
   await notify(tabId, `${added.length > 1 ? added.length + ' answers added' : `${optionLabel(last)}) ${added[0].slice(0, 80)}`} · ${draft.options.length} total` +
-    (draft.question ? '' : '\n(no question saved yet — Alt+Shift+Q)'), 'info', { duration: 2500, always: true });
+    (draft.question ? '' : '\n(no question saved yet — Alt+Shift+Q)'), 'info', { duration: 2500 });
   return { ok: true, draft };
 }
 
@@ -478,7 +482,7 @@ async function manualSolve(tabId, type) {
     const settings = await getSettings();
     const ctx = (await getContexts()).find((c) => c.id === settings.activeContextId) || null;
     const q = { type, text: draft.question, options: draft.options };
-    await notify(tabId, `Solving (${type === 'multi' ? 'multiple choice' : 'single choice'})…`, 'busy', { sticky: true, always: true });
+    await notify(tabId, `Solving (${type === 'multi' ? 'multiple choice' : 'single choice'})…`, 'busy', { sticky: true });
     const result = settings.mode === 'llm'
       ? await solveWithLLM([q], ctx, resolveLLMConfig(settings))
       : solveWithAlgorithm([q], ctx);
@@ -492,9 +496,9 @@ async function manualSolve(tabId, type) {
       return { ok: false };
     }
     manualCount = (manualCount || 0) + 1;
-    await showLabel(tabId, [labelItem('M' + manualCount, q, sel)], { append: true });
+    await showLabel(tabId, [labelItem('M' + manualCount, q, sel)], { append: true, show: true });
     const msg = sel.map((i) => `${optionLabel(i)}) ${draft.options[i].slice(0, 90)}`).join('\n');
-    await notify(tabId, msg + `\n· ${secs}s${result.meta && result.meta.searched ? ' · web' : ''}`, 'ok', { duration: 12000, always: true });
+    await notify(tabId, msg + `\n· ${secs}s${result.meta && result.meta.searched ? ' · web' : ''}`, 'ok', { duration: 12000 });
     return { ok: true, answer: sel, letters: sel.map(optionLabel) };
   } catch (e) {
     await notify(tabId, 'Quiz Solver: ' + (e.message || e), 'err', { duration: 7000 });
@@ -578,9 +582,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     manualTimers.set(tabId, setTimeout(() => recordManual(tabId), 400));
     return false;
   }
-  if (msg.type === 'qs:toggle-label') { // in-page Alt+Shift+H
-    if (!quizSolverEnabled) return false;
-    if (sender.tab && sender.tab.id != null) toggleLabel(sender.tab.id).catch(() => {});
+  if (msg.type === 'qs:hotkey') { // in-page Alt+Shift+H/P/U/Y/L (src/darkmode.js)
+    if (!quizSolverEnabled || !IN_PAGE_COMMANDS.has(msg.command)) return false;
+    if (sender.tab && sender.tab.id != null) runCommand(msg.command, sender.tab.id).catch(() => {});
     return false;
   }
   const handlers = {

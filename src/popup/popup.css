@@ -68,6 +68,9 @@ label.switch input { width: auto; }
 label.switch.disabled { opacity: .5; }
 label.stack { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--muted); margin: 8px 0 4px; }
 label.stack select { color: var(--fg); }
+label.stack .range { display: flex; align-items: center; gap: 8px; }
+label.stack .range input { flex: 1; width: auto; padding: 0; accent-color: var(--accent); }
+label.stack .range output { min-width: 34px; text-align: right; color: var(--fg); }
 #keyLink { font-size: 11px; margin-left: 4px; }
 
 .ctx-none { display: flex; align-items: center; gap: 8px; padding: 4px 2px 8px; color: var(--muted); cursor: pointer; }

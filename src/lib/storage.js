@@ -8,6 +8,7 @@ export const DEFAULT_SETTINGS = {
   notifications: true,         // on-page toast
   flash: false,                // briefly outline the options that were selected
   answerLabel: true,           // persistent answers box in the bottom-right corner
+  labelOpacity: 100,           // answers box opacity in % (full on hover)
   clickMode: 'auto',           // 'auto' | 'trusted' | 'synthetic' (trusted needs the optional "debugger" permission)
   llm: {
     provider: 'gemini',

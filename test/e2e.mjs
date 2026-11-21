@@ -56,6 +56,7 @@ const popup = await ctx.newPage();
 await popup.goto(`chrome-extension://${extId}/src/popup/popup.html`);
 await popup.waitForTimeout(400);
 const tabId = await sw.evaluate(async () => (await chrome.tabs.query({ url: 'http://127.0.0.1:8765/*' }))[0].id);
+await popup.evaluate(() => chrome.runtime.sendMessage({ type: 'popup:quizSolverToggle', on: true }));
 const cmd = (command) => popup.evaluate(([c, t]) => chrome.runtime.sendMessage({ type: 'popup:command', command: c, tabId: t }), [command, tabId]);
 const domState = () => page.evaluate(() => ({
   q1: [0, 1, 2].map((i) => document.getElementById('q1_a' + i).checked),
@@ -227,6 +228,7 @@ await tp.waitForTimeout(500);
 const pop2 = await ctx2.newPage();
 await pop2.goto(`chrome-extension://${ext2}/src/popup/popup.html`);
 const tab2 = await sw2.evaluate(async () => (await chrome.tabs.query({ url: 'http://127.0.0.1:8765/*' }))[0].id);
+await pop2.evaluate(() => chrome.runtime.sendMessage({ type: 'popup:quizSolverToggle', on: true }));
 const cmd2 = (c) => pop2.evaluate(([c, t]) => chrome.runtime.sendMessage({ type: 'popup:command', command: c, tabId: t }), [c, tab2]);
 const tState = async () => {
   const main = await tp.evaluate(() => ({

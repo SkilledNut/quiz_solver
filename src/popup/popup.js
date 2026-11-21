@@ -214,6 +214,11 @@ function initOptions() {
     cb.checked = key === 'answerLabel' ? settings[key] !== false : !!settings[key];
     cb.addEventListener('change', () => { settings[key] = cb.checked; persistSettings(); });
   }
+  const op = $('#labelOpacity');
+  const opVal = $('#labelOpacityVal');
+  op.value = settings.labelOpacity ?? 100;
+  opVal.textContent = op.value + '%';
+  op.addEventListener('input', () => { settings.labelOpacity = +op.value; opVal.textContent = op.value + '%'; persistSettings(); });
   const mode = $('#clickMode');
   const grant = $('#grantDebugger');
   const info = $('#trustedStatus');
@@ -362,12 +367,13 @@ const SHORTCUT_HELP = [
   { name: 'manual-solve-single', title: 'Solve — single choice', detail: 'Asks for exactly one correct answer. Result goes to the Answers box + notification.' },
   { name: 'manual-solve-multi', title: 'Solve — multiple choice', detail: 'Asks for all correct answers.' },
   { group: 'Automatic mode — detects questions on the page and selects answers' },
-  { name: 'solve-quiz', title: 'Solve page', detail: 'Finds all visible questions (also in iframes), solves them in one request, selects the answers and lists them in the Answers box.' },
-  { name: 'undo-answers', title: 'Undo', detail: 'Steps back in this page’s answer history (also your own manual changes).' },
-  { name: 'redo-answers', title: 'Redo', detail: 'Steps forward again after an undo.' },
-  { name: 'reapply-answers', title: 'Re-apply solved answers', detail: 'Puts the last solved answers back after you changed them by hand (works after reload too).' },
+  { note: 'Alt+Shift keys work inside web pages (reload tabs that were open before installing). Optionally add a Chrome-wide key too.' },
+  { name: 'solve-quiz', fallback: 'Alt+Shift+P', title: 'Solve page', detail: 'Finds all visible questions (also in iframes), solves them in one request, selects the answers and lists them in the Answers box.' },
+  { name: 'undo-answers', fallback: 'Alt+Shift+U', title: 'Undo', detail: 'Steps back in this page’s answer history (also your own manual changes).' },
+  { name: 'redo-answers', fallback: 'Alt+Shift+Y', title: 'Redo', detail: 'Steps forward again after an undo.' },
+  { name: 'reapply-answers', fallback: 'Alt+Shift+L', title: 'Re-apply solved answers', detail: 'Puts the last solved answers back after you changed them by hand (works after reload too).' },
   { group: 'Answers box (bottom right)' },
-  { name: 'toggle-label', fallback: 'Alt+Shift+H', title: 'Show / hide answers box', detail: 'Alt+Shift+H works on pages where the extension already ran. For a key that works everywhere (also after reload), set this command in Chrome. Shows the last answers if the box isn’t there yet.' },
+  { name: 'toggle-label', fallback: 'Alt+Shift+H', title: 'Show / hide answers box', detail: 'Shows the last answers if the box isn’t there yet.' },
   { key: 'click box header', title: 'Collapse / expand the box', detail: '✕ closes it.' },
   { group: 'Popup' },
   { key: 'click toolbar icon', title: 'Open this popup' }
@@ -379,6 +385,7 @@ async function loadShortcuts() {
   const keys = Object.fromEntries((await chrome.commands.getAll()).map((c) => [c.name, c.shortcut]));
   for (const h of SHORTCUT_HELP) {
     if (h.group) { list.append(el('div', { className: 'sc-group', textContent: h.group })); continue; }
+    if (h.note) { list.append(el('div', { className: 'sc-detail', textContent: h.note })); continue; }
     const key = h.name ? keys[h.name] : h.key;
     const k = el('kbd', { textContent: key || 'not set', className: key ? '' : 'unset' });
     if (!key) { k.title = 'Click to set'; k.addEventListener('click', openShortcutSettings); }

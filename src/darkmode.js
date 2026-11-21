@@ -3,10 +3,10 @@
  * (invert + hue-rotate) with image correction. Listens for on/off messages.
  */
 (() => {
-  'use strict';
-  const VERSION = '1.0.0';
-  const STYLE_ID = '__realdarkmode_style__';
-  const DATA_ATTR = 'data-realdarkmode';
+  "use strict";
+  const VERSION = "1.1.0";
+  const STYLE_ID = "__realdarkmode_style__";
+  const DATA_ATTR = "data-realdarkmode";
   if (globalThis.__RDM && globalThis.__RDM.version === VERSION) return;
 
   const CSS = `
@@ -31,7 +31,7 @@ html[${DATA_ATTR}="on"] [style*="background-image"] {
 
   function ensureStyle() {
     if (styleEl) return;
-    styleEl = document.createElement('style');
+    styleEl = document.createElement("style");
     styleEl.id = STYLE_ID;
     styleEl.textContent = CSS;
     (document.head || document.documentElement).appendChild(styleEl);
@@ -40,24 +40,80 @@ html[${DATA_ATTR}="on"] [style*="background-image"] {
   function setDarkMode(on) {
     if (on) {
       ensureStyle();
-      document.documentElement.setAttribute(DATA_ATTR, 'on');
+      document.documentElement.setAttribute(DATA_ATTR, "on");
     } else {
       document.documentElement.removeAttribute(DATA_ATTR);
-      if (styleEl && styleEl.parentNode) styleEl.parentNode.removeChild(styleEl);
+      if (styleEl && styleEl.parentNode)
+        styleEl.parentNode.removeChild(styleEl);
       styleEl = null;
     }
   }
 
   chrome.runtime.onMessage.addListener((msg) => {
-    if (!msg || msg.type !== 'rdm:set') return false;
+    if (!msg || msg.type !== "rdm:set") return false;
     setDarkMode(!!msg.on);
     return false;
   });
 
+  // In-page hotkeys (any frame, every page). Only active while the quiz solver is enabled,
+  // otherwise the keys pass through to the page untouched.
+  const HOTKEYS = {
+    H: "toggle-label",
+    P: "solve-quiz",
+    U: "undo-answers",
+    Y: "redo-answers",
+    L: "reapply-answers",
+  };
+  let hotkeysOn = false;
+  chrome.storage.local
+    .get("rdmQuizSolverEnabled")
+    .then((r) => {
+      hotkeysOn = !!(r && r.rdmQuizSolverEnabled);
+    })
+    .catch(() => {});
+  chrome.storage.onChanged.addListener((ch, area) => {
+    if (area === "local" && ch.rdmQuizSolverEnabled)
+      hotkeysOn = !!ch.rdmQuizSolverEnabled.newValue;
+  });
+  addEventListener(
+    "keydown",
+    (e) => {
+      if (
+        !hotkeysOn ||
+        !e.altKey ||
+        !e.shiftKey ||
+        e.ctrlKey ||
+        e.metaKey ||
+        e.repeat
+      )
+        return;
+      // e.key follows the keyboard layout (QWERTZ: Y/Z swapped); fall back to the physical key
+      const k = (
+        e.key && e.key.length === 1 ? e.key : (e.code || "").replace(/^Key/, "")
+      ).toUpperCase();
+      const command = HOTKEYS[k];
+      if (!command) return;
+      e.preventDefault();
+      e.stopPropagation();
+      try {
+        if (chrome.runtime && chrome.runtime.id)
+          chrome.runtime
+            .sendMessage({ type: "qs:hotkey", command })
+            .catch(() => {});
+      } catch {
+        /* extension reloaded */
+      }
+    },
+    true,
+  );
+
   globalThis.__RDM = { version: VERSION, setDarkMode };
 
   // Auto-enable if the background says dark mode is globally on.
-  chrome.runtime.sendMessage({ type: 'rdm:getState' }).then((res) => {
-    if (res && res.on) setDarkMode(true);
-  }).catch(() => {});
+  chrome.runtime
+    .sendMessage({ type: "rdm:getState" })
+    .then((res) => {
+      if (res && res.on) setDarkMode(true);
+    })
+    .catch(() => {});
 })();

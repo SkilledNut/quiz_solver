@@ -38,19 +38,29 @@ letters and option text, e.g. `1. A,C  Red · Blue`.
 - Questions the extension couldn't select on the page are marked **⚠ not selected**. Questions where the
   model's reply couldn't be read are marked **⚠ unparsed**.
 - Manual-mode answers are added as `M1`, `M2`, ….
-- **Alt+Shift+H** toggles the box on any page where the extension has already run, including when the focus
-  is inside an iframe. For a key that works on every page, including right after a reload, set the Chrome
-  command *Show / hide the answers box* at `chrome://extensions/shortcuts`. If the box isn't on the page yet,
-  toggling it on shows the last answers.
+- **Alt+Shift+H** toggles the box on any page, including when the focus is inside an iframe. If the box
+  isn't on the page yet, toggling it on shows the last answers.
+- With *On-page notifications* off (or *Pop up the answers box* off), the box is filled in after every solve
+  but stays hidden until you press Alt+Shift+H. Manual-mode notifications are hidden too; errors still show.
+- **Opacity** slider in Options fades the box; it goes back to full opacity while you hover it.
 - Click the header to collapse the box; ✕ closes it.
 - To bring the box back after a page reload: popup → *Last run* → **Show answers on page**.
-- You can turn it off in Options.
 
-### Automatic mode (no default shortcuts)
+### Automatic mode
 
-Detect the questions on the page and select the answers, plus undo, redo and re-apply. Chrome allows only
-four default shortcuts per extension, so you set these yourself at `chrome://extensions/shortcuts` (the popup
-has a button that opens it). Chrome reserves some combinations, for example `Alt+Shift+Z/R/X/W/A/N`.
+Detect the questions on the page and select the answers, plus undo, redo and re-apply.
+
+| Action | Key on the page |
+|---|---|
+| **Solve page** | `Alt+Shift+P` |
+| **Undo** | `Alt+Shift+U` |
+| **Redo** | `Alt+Shift+Y` |
+| **Re-apply** solved answers | `Alt+Shift+L` |
+| Show / hide answers box | `Alt+Shift+H` |
+
+These keys are handled inside the page (Chrome allows only four default extension shortcuts), so they work
+on any page loaded after the extension was installed and only while the quiz solver is enabled. Tabs that were
+already open need a reload. You can also add Chrome-wide keys at `chrome://extensions/shortcuts`.
 
 ## Popup
 

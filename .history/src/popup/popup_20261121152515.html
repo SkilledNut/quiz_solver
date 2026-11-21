@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>RealDarkMode</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- DEFAULT ENTRY: looks like a regular dark-mode extension -->
+    <div id="darkmodeView" class="darkmode-view">
+      <style>
+        #darkmodeView {
+          display: block;
+          color-scheme: dark;
+          --bg: #0f1318;
+          --surface: #161c23;
+          --surface-2: #1d252e;
+          --border: #29333e;
+          --border-strong: #3b4756;
+          --text: #e8ecf1;
+          --muted: #8b97a6;
+          --faint: #5f6b79;
+          --accent: #8ea2ff;
+          --accent-2: #c08cff;
+          --accent-soft: rgba(142, 162, 255, 0.15);
+          --accent-line: rgba(142, 162, 255, 0.38);
+          --on: #5ee39a;
+          --warn: #f5b454;
+          --radius: 10px;
+          font:
+            13px/1.4 "Segoe UI Variable Text",
+            "Segoe UI",
+            system-ui,
+            -apple-system,
+            Roboto,
+            sans-serif;
+        }
+        #darkmodeView * {
+          box-sizing: border-box;
+        }
+        #darkmodeView .app {
+          width: 340px;
+          padding: 14px 14px 10px;
+          background:
+            radial-gradient(
+              120% 60% at 0% 0%,
+              rgba(142, 162, 255, 0.08),
+              transparent 60%
+            ),
+            var(--bg);
+          color: var(--text);
+          -webkit-font-smoothing: antialiased;
+          user-select: none;
+          opacity: 0;
+          transition: opacity 0.12s ease;
+        }
+        #darkmodeView .app.ready {
+          opacity: 1;
+        }
+        #darkmodeView button {
+          font: inherit;
+        }
+        #darkmodeView button:focus-visible,
+        #darkmodeView .switch:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: 2px;
+        }
+        /* ---------- header ---------- */
+        #darkmodeView .brand {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 14px;
+        }
+        #darkmodeView .logo {
+          width: 30px;
+          height: 30px;
+          flex: none;
+        }
+        #darkmodeView .brand h1 {
+          margin: 0;
+          font-size: 18px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: var(--text);
+        }
+        #darkmodeView .brand h1 span {
+          background: linear-gradient(90deg, var(--accent), var(--accent-2));
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
+        #darkmodeView .ver {
+          margin-left: auto;
+          font-size: 11px;
+          color: var(--faint);
+          font-variant-numeric: tabular-nums;
+        }
+        /* ---------- site + power ---------- */
+        #darkmodeView .top {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 10px;
+          align-items: start;
+        }
+        #darkmodeView .site-btn {
+          width: 100%;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          padding: 0 12px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          color: var(--text);
+          font-weight: 600;
+          text-align: left;
+          cursor: pointer;
+          transition:
+            border-color 0.15s,
+            background 0.15s;
+        }
+        #darkmodeView .site-btn:hover:not(:disabled) {
+          background: var(--surface-2);
+          border-color: var(--border-strong);
+        }
+        #darkmodeView .site-btn:disabled {
+          cursor: default;
+          color: var(--muted);
+        }
+        #darkmodeView .site-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        #darkmodeView .dot {
+          width: 8px;
+          height: 8px;
+          flex: none;
+          border-radius: 50%;
+          background: var(--faint);
+          box-shadow: 0 0 0 3px rgba(95, 107, 121, 0.2);
+          transition:
+            background 0.2s,
+            box-shadow 0.2s;
+        }
+        #darkmodeView [data-tone="on"] .dot {
+          background: var(--on);
+          box-shadow: 0 0 0 3px rgba(94, 227, 154, 0.18);
+        }
+        #darkmodeView [data-tone="warn"] .dot {
+          background: var(--warn);
+          box-shadow: 0 0 0 3px rgba(245, 180, 84, 0.18);
+        }
+        #darkmodeView .status {
+          margin: 6px 2px 0;
+          min-height: 16px;
+          font-size: 11.5px;
+          color: var(--muted);
+        }
+        #darkmodeView .status[data-tone="on"] {
+          color: var(--on);
+        }
+        #darkmodeView .status[data-tone="warn"] {
+          color: var(--warn);
+        }
+        /* ---------- segmented controls ---------- */
+        #darkmodeView .seg {
+          display: inline-flex;
+          gap: 3px;
+          padding: 3px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+        }
+        #darkmodeView .seg-block {
+          display: flex;
+          width: 100%;
+        }
+        #darkmodeView .seg button {
+          flex: 1;
+          height: 28px;
+          padding: 0 14px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          border: 0;
+          border-radius: 7px;
+          background: transparent;
+          color: var(--muted);
+          font-weight: 600;
+          cursor: pointer;
+          transition:
+            background 0.15s,
+            color 0.15s,
+            box-shadow 0.15s;
+        }
+        #darkmodeView .seg button:hover {
+          color: var(--text);
+        }
+        #darkmodeView .seg button svg {
+          width: 15px;
+          height: 15px;
+        }
+        #darkmodeView .seg button[aria-pressed="true"] {
+          background: var(--accent-soft);
+          color: var(--text);
+          box-shadow: inset 0 0 0 1px var(--accent-line);
+        }
+        #darkmodeView .seg-power button[data-power="on"][aria-pressed="true"] {
+          background: linear-gradient(135deg, var(--accent), var(--accent-2));
+          color: #10131a;
+          box-shadow: 0 2px 10px rgba(142, 162, 255, 0.35);
+        }
+        #darkmodeView .seg-power button[data-power="off"][aria-pressed="true"] {
+          background: var(--surface-2);
+          color: var(--text);
+          box-shadow: inset 0 0 0 1px var(--border-strong);
+        }
+        /* ---------- tabs ---------- */
+        #darkmodeView .tabs {
+          display: flex;
+          gap: 2px;
+          margin: 14px 0 12px;
+          border-bottom: 1px solid var(--border);
+        }
+        #darkmodeView .tabs button {
+          position: relative;
+          padding: 8px 12px 10px;
+          border: 0;
+          background: none;
+          color: var(--muted);
+          font-weight: 600;
+          cursor: pointer;
+        }
+        #darkmodeView .tabs button:hover {
+          color: var(--text);
+        }
+        #darkmodeView .tabs button[aria-selected="true"] {
+          color: var(--text);
+        }
+        #darkmodeView .tabs button[aria-selected="true"]::after {
+          content: "";
+          position: absolute;
+          left: 10px;
+          right: 10px;
+          bottom: -1px;
+          height: 2px;
+          border-radius: 2px;
+          background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        }
+        #darkmodeView .panel {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        #darkmodeView .panel[hidden] {
+          display: none;
+        }
+        #darkmodeView .app[data-power="off"] #rdm-panel-filter {
+          opacity: 0.5;
+          transition: opacity 0.2s;
+        }
+        #darkmodeView .app[data-power="off"] #rdm-panel-filter:hover {
+          opacity: 0.8;
+        }
+        /* ---------- sliders ---------- */
+        #darkmodeView .sliders {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        #darkmodeView .slider {
+          display: grid;
+          grid-template-columns: 30px minmax(0, 1fr) 30px;
+          column-gap: 6px;
+          row-gap: 3px;
+          align-items: center;
+        }
+        #darkmodeView .step {
+          height: 32px;
+          padding: 0;
+          display: grid;
+          place-items: center;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          color: var(--muted);
+          cursor: pointer;
+          transition:
+            color 0.15s,
+            border-color 0.15s,
+            transform 0.08s;
+        }
+        #darkmodeView .step:hover {
+          color: var(--text);
+          border-color: var(--border-strong);
+        }
+        #darkmodeView .step:active {
+          transform: scale(0.93);
+        }
+        #darkmodeView .step svg {
+          width: 14px;
+          height: 14px;
+        }
+        #darkmodeView .track {
+          position: relative;
+          height: 32px;
+        }
+        #darkmodeView .track input {
+          -webkit-appearance: none;
+          appearance: none;
+          display: block;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          background: linear-gradient(
+            90deg,
+            var(--accent-soft) 0 var(--p, 50%),
+            var(--surface) var(--p, 50%) 100%
+          );
+          cursor: ew-resize;
+          outline: none;
+          transition: border-color 0.15s;
+        }
+        #darkmodeView .track input:hover {
+          border-color: var(--border-strong);
+        }
+        #darkmodeView .track input:focus-visible {
+          border-color: var(--accent);
+        }
+        #darkmodeView .track input::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 3px;
+          height: 20px;
+          border-radius: 2px;
+          background: var(--accent);
+          box-shadow: 0 0 8px rgba(142, 162, 255, 0.7);
+        }
+        #darkmodeView .track-label {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          pointer-events: none;
+          font-weight: 600;
+          letter-spacing: 0.01em;
+        }
+        #darkmodeView .value {
+          grid-column: 2;
+          text-align: center;
+          font-size: 11px;
+          color: var(--faint);
+          font-variant-numeric: tabular-nums;
+        }
+        #darkmodeView .slider[data-changed] .value {
+          color: var(--accent);
+        }
+        /* ---------- site list ---------- */
+        #darkmodeView .hint {
+          margin: 0;
+          font-size: 11.5px;
+          color: var(--muted);
+        }
+        #darkmodeView textarea {
+          width: 100%;
+          height: 168px;
+          padding: 10px 12px;
+          resize: none;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          color: var(--text);
+          font:
+            12.5px/1.6 ui-monospace,
+            "Cascadia Code",
+            Consolas,
+            monospace;
+          outline: none;
+          user-select: text;
+        }
+        #darkmodeView textarea:focus {
+          border-color: var(--accent);
+        }
+        #darkmodeView textarea::placeholder {
+          color: var(--faint);
+        }
+        /* ---------- more ---------- */
+        #darkmodeView .option {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 12px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          cursor: pointer;
+        }
+        #darkmodeView .option-text strong {
+          display: block;
+          font-weight: 600;
+        }
+        #darkmodeView .option-text span {
+          font-size: 11.5px;
+          color: var(--muted);
+        }
+        #darkmodeView .switch {
+          -webkit-appearance: none;
+          appearance: none;
+          position: relative;
+          flex: none;
+          width: 36px;
+          height: 20px;
+          margin: 0;
+          border-radius: 999px;
+          background: var(--surface-2);
+          box-shadow: inset 0 0 0 1px var(--border-strong);
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        #darkmodeView .switch::before {
+          content: "";
+          position: absolute;
+          top: 3px;
+          left: 3px;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: var(--muted);
+          transition:
+            transform 0.2s,
+            background 0.2s;
+        }
+        #darkmodeView .switch:checked {
+          background: linear-gradient(135deg, var(--accent), var(--accent-2));
+          box-shadow: none;
+        }
+        #darkmodeView .switch:checked::before {
+          transform: translateX(16px);
+          background: #10131a;
+        }
+        #darkmodeView .btn {
+          height: 34px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          color: var(--text);
+          font-weight: 600;
+          cursor: pointer;
+          transition:
+            background 0.15s,
+            border-color 0.15s;
+        }
+        #darkmodeView .btn:hover {
+          background: var(--surface-2);
+          border-color: var(--border-strong);
+        }
+        /* ---------- footer ---------- */
+        #darkmodeView footer {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 14px;
+          padding-top: 10px;
+          border-top: 1px solid var(--border);
+          font-size: 11px;
+          color: var(--faint);
+        }
+      </style>
+
+      <!-- kept hidden so your existing popup script still finds these -->
+      <div hidden>
+        <input type="checkbox" id="darkModeToggle" />
+        <input type="checkbox" id="saturationToggle" />
+      </div>
+
+      <main class="app" data-power="off">
+        <header class="brand">
+          <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+            <defs>
+              <linearGradient id="rdm-g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#8ea2ff" />
+                <stop offset="1" stop-color="#c08cff" />
+              </linearGradient>
+              <mask id="rdm-m">
+                <rect width="32" height="32" fill="#fff" />
+                <circle cx="20.5" cy="11.5" r="7" fill="#000" />
+              </mask>
+            </defs>
+            <rect width="32" height="32" rx="9" fill="#1b222b" />
+            <circle
+              cx="15"
+              cy="17"
+              r="8.5"
+              fill="url(#rdm-g)"
+              mask="url(#rdm-m)"
+            />
+            <circle cx="23.5" cy="20" r="1.3" fill="#c08cff" />
+          </svg>
+          <h1>Real<span>Dark</span>Mode</h1>
+          <span class="ver" id="rdm-version"></span>
+        </header>
+
+        <section class="top">
+          <div class="site">
+            <button id="rdm-siteBtn" class="site-btn" type="button">
+              <span class="dot" aria-hidden="true"></span>
+              <span class="site-name" id="rdm-siteName">—</span>
+            </button>
+            <p class="status" id="rdm-siteStatus"></p>
+          </div>
+          <div
+            class="seg seg-power"
+            role="group"
+            aria-label="Dark mode everywhere"
+          >
+            <button type="button" data-power="on">On</button>
+            <button type="button" data-power="off">Off</button>
+          </div>
+        </section>
+
+        <nav class="tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            data-tab="filter"
+            aria-selected="true"
+          >
+            Filter
+          </button>
+          <button
+            type="button"
+            role="tab"
+            data-tab="sites"
+            aria-selected="false"
+          >
+            Site list
+          </button>
+          <button
+            type="button"
+            role="tab"
+            data-tab="more"
+            aria-selected="false"
+          >
+            More
+          </button>
+        </nav>
+
+        <section class="panel" id="rdm-panel-filter" role="tabpanel">
+          <div class="seg seg-block seg-mode" role="group" aria-label="Mode">
+            <button type="button" data-mode="dark">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M20.2 14.6A8.5 8.5 0 0 1 9.4 3.8 8.5 8.5 0 1 0 20.2 14.6z"
+                  fill="currentColor"
+                />
+              </svg>
+              Dark
+            </button>
+            <button type="button" data-mode="light">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="4.2" fill="currentColor" />
+                <path
+                  d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+              Light
+            </button>
+          </div>
+          <div class="sliders" id="rdm-sliders">
+            <div class="slider" data-key="brightness">
+              <button
+                type="button"
+                class="step"
+                data-dir="-1"
+                aria-label="Decrease Brightness"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M10 3 5 8l5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div class="track">
+                <input
+                  type="range"
+                  min="50"
+                  max="150"
+                  step="1"
+                  aria-label="Brightness"
+                  title="Double-click to reset"
+                />
+                <span class="track-label">Brightness</span>
+              </div>
+              <button
+                type="button"
+                class="step"
+                data-dir="1"
+                aria-label="Increase Brightness"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M6 3l5 5-5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <span class="value"></span>
+            </div>
+            <div class="slider" data-key="contrast">
+              <button
+                type="button"
+                class="step"
+                data-dir="-1"
+                aria-label="Decrease Contrast"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M10 3 5 8l5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div class="track">
+                <input
+                  type="range"
+                  min="50"
+                  max="150"
+                  step="1"
+                  aria-label="Contrast"
+                  title="Double-click to reset"
+                />
+                <span class="track-label">Contrast</span>
+              </div>
+              <button
+                type="button"
+                class="step"
+                data-dir="1"
+                aria-label="Increase Contrast"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M6 3l5 5-5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <span class="value"></span>
+            </div>
+            <div class="slider" data-key="sepia">
+              <button
+                type="button"
+                class="step"
+                data-dir="-1"
+                aria-label="Decrease Sepia"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M10 3 5 8l5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div class="track">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  aria-label="Sepia"
+                  title="Double-click to reset"
+                />
+                <span class="track-label">Sepia</span>
+              </div>
+              <button
+                type="button"
+                class="step"
+                data-dir="1"
+                aria-label="Increase Sepia"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M6 3l5 5-5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <span class="value"></span>
+            </div>
+            <div class="slider" data-key="grayscale">
+              <button
+                type="button"
+                class="step"
+                data-dir="-1"
+                aria-label="Decrease Grayscale"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M10 3 5 8l5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div class="track">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  aria-label="Grayscale"
+                  title="Double-click to reset"
+                />
+                <span class="track-label">Grayscale</span>
+              </div>
+              <button
+                type="button"
+                class="step"
+                data-dir="1"
+                aria-label="Increase Grayscale"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    d="M6 3l5 5-5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <span class="value"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="rdm-panel-sites" role="tabpanel" hidden>
+          <div class="seg seg-block" role="group" aria-label="Site list mode">
+            <button type="button" data-listmode="exclude">
+              Skip listed sites
+            </button>
+            <button type="button" data-listmode="only">
+              Only listed sites
+            </button>
+          </div>
+          <p class="hint" id="rdm-listHint"></p>
+          <textarea
+            id="rdm-siteList"
+            spellcheck="false"
+            placeholder="example.com&#10;docs.google.com"
+          ></textarea>
+        </section>
+
+        <section class="panel" id="rdm-panel-more" role="tabpanel" hidden>
+          <label class="option">
+            <span class="option-text">
+              <strong>Skip sites that are already dark</strong>
+              <span>Leaves pages with their own dark theme untouched.</span>
+            </span>
+            <input type="checkbox" class="switch" id="rdm-detectDark" />
+          </label>
+          <button type="button" class="btn" id="rdm-resetBtn">
+            Reset filter settings
+          </button>
+        </section>
+
+        <footer>
+          <span>Double-click a slider to reset it</span>
+        </footer>
+      </main>
+    </div>
+    <script src="darkmode-view.js" defer></script>
+
+    <!-- HIDDEN QUIZ SOLVER MODE (revealed by the saturation toggle) -->
+    <div id="quizView" hidden>
+      <header class="top">
+        <div class="brand">
+          <img src="../../icons/icon32.png" alt="" width="20" height="20" />
+          Quiz Solver
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Solving mode">
+          <button type="button" data-mode="algorithm" role="radio">
+            Algorithm
+          </button>
+          <button type="button" data-mode="llm" role="radio">LLM</button>
+        </div>
+      </header>
+
+      <div class="actions">
+        <button type="button" id="solve" class="primary">Solve page</button>
+        <button
+          type="button"
+          id="highlight"
+          title="Outline the questions the extension detects (8 s)"
+        >
+          Show detection
+        </button>
+      </div>
+      <div id="status" class="status" hidden></div>
+
+      <!-- SHORTCUTS -->
+      <section class="card" data-sec="shortcuts">
+        <h2 class="sec-head">
+          <button type="button" class="sec-toggle" aria-expanded="true">
+            Shortcuts <span class="hint">what each one does</span>
+          </button>
+        </h2>
+        <div class="sec-body">
+          <div id="shortcutList" class="shortcuts"></div>
+          <div class="row">
+            <button type="button" id="editShortcuts" class="ghost">
+              Change / set shortcuts…
+            </button>
+            <span class="small"
+              >Chrome blocks some combos (e.g. Alt+Shift+A/Z/R).</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- MANUAL -->
+      <section class="card" data-sec="manual">
+        <h2 class="sec-head">
+          <button type="button" class="sec-toggle" aria-expanded="true">
+            Manual question <span class="hint">select text + shortcuts</span>
+          </button>
+        </h2>
+        <div class="sec-body">
+          <div id="draftQ" class="draft-q small"></div>
+          <ol id="draftOpts" class="draft-opts" type="A"></ol>
+          <div class="row wrap">
+            <button type="button" data-cmd="manual-solve-single">
+              Solve single
+            </button>
+            <button type="button" data-cmd="manual-solve-multi">
+              Solve multi
+            </button>
+            <span class="spacer"></span>
+            <button type="button" id="clearDraft" class="ghost danger">
+              Clear
+            </button>
+          </div>
+          <div id="draftAnswer" class="draft-ans" hidden></div>
+        </div>
+      </section>
+
+      <!-- CONTEXTS -->
+      <section class="card" data-sec="contexts">
+        <h2 class="sec-head">
+          <button type="button" class="sec-toggle" aria-expanded="true">
+            Contexts <span class="hint">knowledge bases</span>
+          </button>
+        </h2>
+        <div class="sec-body">
+          <label class="ctx-none"
+            ><input type="radio" name="activeCtx" value="" />
+            <span>No context (LLM general knowledge only)</span></label
+          >
+          <div id="ctxList"></div>
+          <button type="button" id="addCtx" class="ghost">+ New context</button>
+        </div>
+      </section>
+
+      <!-- LLM -->
+      <section class="card" data-sec="llm" id="llmCard">
+        <h2 class="sec-head">
+          <button type="button" class="sec-toggle" aria-expanded="true">
+            LLM settings
+          </button>
+        </h2>
+        <div class="sec-body">
+          <div class="grid">
+            <label
+              >Provider
+              <select id="provider"></select>
+            </label>
+            <label id="formatWrap" hidden
+              >API format
+              <select id="apiFormat"></select>
+            </label>
+            <label class="full"
+              >API key
+              <a id="keyLink" target="_blank" rel="noopener">get key</a>
+              <span class="keyrow">
+                <input
+                  id="apiKey"
+                  type="password"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="paste API key"
+                />
+                <button
+                  type="button"
+                  id="toggleKey"
+                  class="icon"
+                  title="Show / hide"
+                >
+                  👁
+                </button>
+              </span>
+            </label>
+            <label class="full"
+              >Model
+              <input id="model" list="modelList" spellcheck="false" />
+              <datalist id="modelList"></datalist>
+            </label>
+            <label class="full"
+              >Base URL
+              <input id="baseUrl" spellcheck="false" />
+            </label>
+            <label class="switch full"
+              ><input type="checkbox" id="webSearch" />
+              <span
+                >Web search when the knowledge base lacks the answer</span
+              ></label
+            >
+            <p id="providerNote" class="note full"></p>
+            <label
+              >Reasoning effort
+              <select id="effort">
+                <option value="">provider default</option>
+                <option value="minimal">minimal (fastest)</option>
+                <option value="low">low</option>
+                <option value="medium">medium</option>
+                <option value="high">high</option>
+              </select>
+            </label>
+            <label
+              >Max tokens
+              <input id="maxTokens" type="number" min="256" step="256" />
+            </label>
+            <label
+              >Temperature
+              <input
+                id="temperature"
+                type="number"
+                min="0"
+                max="2"
+                step="0.1"
+                placeholder="default"
+              />
+            </label>
+            <label class="full"
+              >Extra instructions <span class="hint">optional</span>
+              <textarea
+                id="customInstructions"
+                rows="2"
+                placeholder="e.g. Questions are in Slovene. Prefer definitions from the lecture notes."
+              ></textarea>
+            </label>
+          </div>
+          <div class="row">
+            <button type="button" id="test">Test connection</button>
+            <span id="testResult" class="small"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- OPTIONS -->
+      <section class="card" data-sec="options">
+        <h2 class="sec-head">
+          <button type="button" class="sec-toggle" aria-expanded="false">
+            Options
+          </button>
+        </h2>
+        <div class="sec-body" hidden>
+          <label class="switch"
+            ><input type="checkbox" id="viewportOnly" />
+            <span>Only questions currently in the viewport</span></label
+          >
+          <label class="switch"
+            ><input type="checkbox" id="notifications" />
+            <span
+              >On-page notifications (off also keeps the answers box hidden
+              until Alt+Shift+H)</span
+            ></label
+          >
+          <label class="switch"
+            ><input type="checkbox" id="flash" />
+            <span>Briefly outline selected answers</span></label
+          >
+          <label class="switch"
+            ><input type="checkbox" id="answerLabel" />
+            <span
+              >Pop up the answers box after solving (off: Alt+Shift+H shows
+              it)</span
+            ></label
+          >
+          <label class="stack"
+            >Answers box opacity <span class="hint">full on hover</span>
+            <span class="range"
+              ><input
+                type="range"
+                id="labelOpacity"
+                min="5"
+                max="100"
+                step="5" />
+              <output id="labelOpacityVal"></output
+            ></span>
+          </label>
+          <label class="stack"
+            >Click method
+            <select id="clickMode">
+              <option value="auto">
+                Auto — JS clicks, real clicks only where needed
+              </option>
+              <option value="trusted">Always real (trusted) clicks</option>
+              <option value="synthetic">JS clicks only</option>
+            </select>
+          </label>
+          <p class="note">
+            Real clicks use Chrome's debugger API (like Puppeteer) so sites that
+            ignore scripted clicks still register them. Chrome shows a “started
+            debugging this browser” bar while it clicks.
+          </p>
+          <div class="row">
+            <span id="trustedStatus" class="small"></span
+            ><button type="button" id="grantDebugger" hidden>
+              Enable real clicks
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- HISTORY -->
+      <section class="card" data-sec="history">
+        <h2 class="sec-head">
+          <button type="button" class="sec-toggle" aria-expanded="false">
+            History <span class="hint">this page</span>
+          </button>
+        </h2>
+        <div class="sec-body" hidden>
+          <div class="row wrap">
+            <button type="button" data-cmd="undo-answers">↶ Undo</button>
+            <button type="button" data-cmd="redo-answers">↷ Redo</button>
+            <button type="button" data-cmd="reapply-answers">
+              ↻ Re-apply solved
+            </button>
+            <button type="button" id="clearHistory" class="ghost danger">
+              Clear
+            </button>
+          </div>
+          <ol id="historyList" class="history"></ol>
+        </div>
+      </section>
+
+      <!-- LAST RUN -->
+      <section class="card" data-sec="lastrun">
+        <h2 class="sec-head">
+          <button type="button" class="sec-toggle" aria-expanded="false">
+            Last run
+          </button>
+        </h2>
+        <div class="sec-body" hidden>
+          <button type="button" id="showLabel">Show answers on page</button>
+          <div id="lastRun" class="small">Nothing yet.</div>
+        </div>
+      </section>
+
+      <template id="ctxTpl">
+        <div class="ctx">
+          <div class="ctx-head">
+            <input
+              type="radio"
+              name="activeCtx"
+              class="ctx-radio"
+              title="Use this context"
+            />
+            <button type="button" class="ctx-expand" aria-expanded="false">
+              <span class="ctx-title"></span>
+              <span class="ctx-meta"></span>
+              <span class="chev">▸</span>
+            </button>
+          </div>
+          <div class="ctx-body" hidden>
+            <input
+              class="ctx-name"
+              placeholder="Context name (e.g. Biology – chapter 3)"
+            />
+            <textarea
+              class="ctx-text"
+              rows="10"
+              placeholder="Paste the knowledge base here: lecture notes, definitions, Q&amp;A pairs…"
+            ></textarea>
+            <div class="row">
+              <label class="file ghost"
+                >Import .txt/.md<input
+                  type="file"
+                  class="ctx-file"
+                  accept=".txt,.md,.csv,.json,.html,.htm,.xml,text/*"
+                  multiple
+                  hidden
+              /></label>
+              <span class="spacer"></span>
+              <button type="button" class="ctx-delete ghost danger">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
