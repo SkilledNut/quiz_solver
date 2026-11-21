@@ -8,6 +8,8 @@ export const DEFAULT_SETTINGS = {
   notifications: true,         // on-page toast
   flash: false,                // briefly outline the options that were selected
   answerLabel: true,           // persistent answers box in the bottom-right corner
+  discreetMode: false,         // minimal answers box
+  discreetTransparency: 50,    // transparency of the answers box in discreet mode (0 opaque – 90 mostly invisible)
   clickMode: 'auto',           // 'auto' | 'trusted' | 'synthetic' (trusted needs the optional "debugger" permission)
   llm: {
     provider: 'gemini',

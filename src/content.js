@@ -810,10 +810,14 @@
     (document.head || document.documentElement).appendChild(st);
   }
   function flashEl(el) {
-    if (!el || !el.setAttribute) return;
+    if (!el || !el.style) return;
     ensureStyle();
     el.setAttribute('data-qs-flash', '');
-    setTimeout(() => el.removeAttribute('data-qs-flash'), 1400);
+    const o = el.style.outline, oo = el.style.outlineOffset, bs = el.style.boxShadow;
+    el.style.outline = '2px solid #22c55e';
+    el.style.outlineOffset = '2px';
+    el.style.boxShadow = '0 0 0 5px rgba(34,197,94,0.25)';
+    setTimeout(() => { el.style.outline = o; el.style.outlineOffset = oo; el.style.boxShadow = bs; el.removeAttribute('data-qs-flash'); }, 1600);
   }
   function highlight(on = true) {
     ensureStyle();
@@ -922,7 +926,13 @@
         .n{color:#94a3b8;min-width:22px;text-align:right}
         b{color:#4ade80;min-width:28px}
         .tx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;color:#cbd5e1}
-        .warn b{color:#fbbf24}.w{color:#fbbf24;white-space:nowrap;font-size:11px}</style>
+        .warn b{color:#fbbf24}.w{color:#fbbf24;white-space:nowrap;font-size:11px}
+        .box.discreet{width:auto;min-width:0;max-width:none;background:transparent;border:none;box-shadow:none}
+        .box.discreet .hd{display:none}
+        .box.discreet .n,.box.discreet .tx,.box.discreet .w{display:none}
+        .box.discreet .list{padding:0;max-height:none;overflow:visible}
+        .box.discreet b{color:#4ade80;font-size:12px;font-weight:700;min-width:0;text-shadow:0 1px 3px rgba(0,0,0,0.9)}
+        .box.discreet .row{padding:0 0 1px 0}</style>
         <div class="box"><div class="hd"><span class="ttl">Answers</span><span class="count"></span>
         <button class="min" title="Collapse / expand">▾</button><button class="x" title="Close">✕</button></div>
         <div class="list"></div></div>`;
@@ -935,6 +945,10 @@
     }
     labelItems = opts.append ? labelItems.concat(items).slice(-50) : items.slice(0, 200);
     labelHost.style.display = '';
+    if (labelRoot) {
+      labelRoot.querySelector('.box').classList.toggle('discreet', !!opts.discreet);
+      labelHost.style.opacity = typeof opts.opacity === 'number' ? Math.max(0.1, Math.min(1, opts.opacity)) : '';
+    }
     renderLabel();
     return true;
   }

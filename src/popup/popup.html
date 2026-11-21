@@ -145,6 +145,10 @@
         <label class="switch"><input type="checkbox" id="notifications"> <span>On-page notifications</span></label>
         <label class="switch"><input type="checkbox" id="flash"> <span>Briefly outline selected answers</span></label>
         <label class="switch"><input type="checkbox" id="answerLabel"> <span>Answers box in the bottom-right corner</span></label>
+        <label class="switch"><input type="checkbox" id="discreetMode"> <span>Discreet mode — minimal answers box</span></label>
+        <label class="stack">Transparency <span id="discreetOpacityVal" class="small">50%</span>
+          <input type="range" id="discreetOpacity" min="0" max="90" step="5" value="50">
+        </label>
         <label class="stack">Click method
           <select id="clickMode">
             <option value="auto">Auto — JS clicks, real clicks only where needed</option>

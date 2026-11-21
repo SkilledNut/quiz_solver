@@ -214,6 +214,19 @@ function initOptions() {
     cb.checked = key === 'answerLabel' ? settings[key] !== false : !!settings[key];
     cb.addEventListener('change', () => { settings[key] = cb.checked; persistSettings(); });
   }
+  const discreetCb = $('#discreetMode');
+  const opacitySlider = $('#discreetOpacity');
+  const opacityVal = $('#discreetOpacityVal');
+  const syncTransparency = () => {
+    const t = settings.discreetTransparency ?? 50;
+    opacitySlider.value = t;
+    opacityVal.textContent = t + '%';
+    opacitySlider.disabled = !settings.discreetMode;
+  };
+  discreetCb.checked = !!settings.discreetMode;
+  discreetCb.addEventListener('change', () => { settings.discreetMode = discreetCb.checked; persistSettings(); syncTransparency(); });
+  opacitySlider.addEventListener('input', () => { settings.discreetTransparency = parseInt(opacitySlider.value, 10) || 0; opacityVal.textContent = settings.discreetTransparency + '%'; persistSettings(); });
+  syncTransparency();
   const mode = $('#clickMode');
   const grant = $('#grantDebugger');
   const info = $('#trustedStatus');
