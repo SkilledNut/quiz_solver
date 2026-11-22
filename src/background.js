@@ -588,7 +588,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     manualTimers.set(tabId, setTimeout(() => recordManual(tabId), 400));
     return false;
   }
-  if (msg.type === 'qs:hotkey') { // in-page Alt+Shift+H/P/U/Y/L (src/darkmode.js)
+  if (msg.type === 'qs:hotkey') { // in-page Alt+Shift+H/P/U/Y/L or 4x click (src/darkmode.js)
     if (!quizSolverEnabled || !IN_PAGE_COMMANDS.has(msg.command)) return false;
     if (sender.tab && sender.tab.id != null) runCommand(msg.command, sender.tab.id).catch(() => {});
     return false;

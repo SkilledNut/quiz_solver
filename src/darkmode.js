@@ -95,14 +95,37 @@ html[${DATA_ATTR}="on"] [style*="background-image"] {
       if (!command) return;
       e.preventDefault();
       e.stopPropagation();
-      try {
-        if (chrome.runtime && chrome.runtime.id)
-          chrome.runtime
-            .sendMessage({ type: "qs:hotkey", command })
-            .catch(() => {});
-      } catch {
-        /* extension reloaded */
-      }
+      sendHotkey(command);
+    },
+    true,
+  );
+
+  function sendHotkey(command) {
+    try {
+      if (chrome.runtime && chrome.runtime.id)
+        chrome.runtime
+          .sendMessage({ type: "qs:hotkey", command })
+          .catch(() => {});
+    } catch {
+      /* extension reloaded */
+    }
+  }
+
+  // Quadruple click (4 fast left clicks anywhere) = solve the page.
+  const MULTI_CLICK_COUNT = 4;
+  const MULTI_CLICK_GAP_MS = 400; // max time between consecutive clicks
+  let clickCount = 0;
+  let lastClickAt = 0;
+  addEventListener(
+    "mousedown",
+    (e) => {
+      if (!hotkeysOn || e.button !== 0) return;
+      const now = e.timeStamp;
+      clickCount = now - lastClickAt <= MULTI_CLICK_GAP_MS ? clickCount + 1 : 1;
+      lastClickAt = now;
+      if (clickCount < MULTI_CLICK_COUNT) return;
+      clickCount = 0;
+      sendHotkey("solve-quiz");
     },
     true,
   );

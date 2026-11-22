@@ -426,7 +426,20 @@ async function initDarkMode() {
     darkView.hidden = on;
     quizView.hidden = !on;
     send({ type: 'popup:quizSolverToggle', on }).catch(() => {});
+    if (on) renderPower(true);
   });
+
+  // On/off switch in the quiz header: off = solver disabled, page shortcuts + 4x click ignored
+  const power = document.getElementById('qsEnabled');
+  power.addEventListener('change', () => {
+    renderPower(power.checked);
+    send({ type: 'popup:quizSolverToggle', on: power.checked }).catch(() => {});
+  });
+}
+function renderPower(on) {
+  $('#qsEnabled').checked = on;
+  $('.power-text').textContent = on ? 'On' : 'Off';
+  $('#quizView').classList.toggle('qs-off', !on);
 }
 
 async function main() {

@@ -52,7 +52,7 @@ Detect the questions on the page and select the answers, plus undo, redo and re-
 
 | Action | Key on the page |
 |---|---|
-| **Solve page** | `Alt+Shift+P` |
+| **Solve page** | `Alt+Shift+P` or 4 fast clicks anywhere on the page |
 | **Undo** | `Alt+Shift+U` |
 | **Redo** | `Alt+Shift+Y` |
 | **Re-apply** solved answers | `Alt+Shift+L` |

@@ -35,6 +35,16 @@ a { color: var(--accent); }
 
 .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .brand { display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 15px; }
+.top { gap: 8px; }
+.power { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; font-weight: 600; user-select: none; }
+.power input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.power-track { position: relative; width: 32px; height: 18px; border-radius: 9px; background: var(--line); transition: background .15s; }
+.power-track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.3); transition: transform .15s; }
+.power input:checked + .power-track { background: var(--ok); }
+.power input:checked + .power-track::after { transform: translateX(14px); }
+.power input:focus-visible + .power-track { outline: 2px solid var(--accent); outline-offset: 1px; }
+.power-text { min-width: 20px; color: var(--muted); }
+#quizView.qs-off > :not(.top) { opacity: .45; pointer-events: none; }
 .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .seg button { border: 0; border-radius: 0; padding: 5px 12px; background: var(--card); }
 .seg button[aria-checked="true"] { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
