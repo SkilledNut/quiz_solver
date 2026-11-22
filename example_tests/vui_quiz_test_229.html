@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<title>VUI Quiz Test – 229 vprašanj</title>
+<style>
+body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; }
+fieldset { border: 1px solid #ccc; padding: 15px; margin: 15px 0; border-radius: 5px; }
+legend { font-weight: bold; font-size: 1.1em; }
+label { display: block; margin: 6px 0; cursor: pointer; }
+h2 { margin-top: 40px; padding-bottom: 6px; border-bottom: 2px solid #ddd; font-size: 1.3em; }
+
+/* --- preverjanje odgovorov (samo HTML + CSS, brez JavaScripta) --- */
+body { counter-reset: tocke; padding-bottom: 90px; }
+#preveri { position: absolute; opacity: 0; pointer-events: none; }
+.vrstica { position: sticky; bottom: 0; background: #fff; border-top: 1px solid #ccc; padding: 12px 0; display: flex; gap: 12px; align-items: center; }
+.gumb { font: inherit; padding: 8px 16px; border: 1px solid #888; border-radius: 5px; background: #f2f2f2; cursor: pointer; }
+.gumb:hover { background: #e6e6e6; }
+#preveri:checked ~ .vrstica .gumb-preveri { background: #dfe9f7; border-color: #3b6fb6; }
+.rezultat { font-weight: bold; }
+#preveri:checked ~ .vrstica .rezultat::after { content: "Pravilnih: " counter(tocke) " / 229"; }
+
+/* izbran napačen odgovor = rdeče */
+#preveri:checked ~ fieldset label:has(input:checked) { background: #fbe3e3; outline: 1px solid #d9534f; border-radius: 3px; }
+/* neodgovorjeno vprašanje = oranžen okvir */
+#preveri:checked ~ fieldset:not(:has(input:checked)) { border-color: #f0ad4e; box-shadow: 0 0 0 2px #f8d9a8; }
+/* pravilen odgovor = zeleno */
+#preveri:checked ~ fieldset:nth-of-type(1) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(2) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(3) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(4) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(5) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(6) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(7) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(8) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(9) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(10) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(11) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(12) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(13) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(14) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(15) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(16) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(17) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(18) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(19) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(20) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(21) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(22) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(23) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(24) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(25) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(26) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(27) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(28) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(29) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(30) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(31) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(32) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(33) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(34) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(35) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(36) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(37) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(38) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(39) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(40) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(41) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(42) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(43) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(44) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(45) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(46) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(47) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(48) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(49) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(50) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(51) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(52) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(53) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(54) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(55) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(56) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(57) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(58) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(59) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(60) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(61) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(62) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(63) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(64) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(65) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(66) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(67) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(68) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(69) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(70) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(71) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(72) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(73) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(74) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(75) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(76) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(77) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(78) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(79) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(80) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(81) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(82) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(83) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(84) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(85) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(86) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(87) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(88) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(89) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(90) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(91) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(92) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(93) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(94) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(95) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(96) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(97) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(98) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(99) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(100) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(101) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(102) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(103) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(104) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(105) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(106) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(107) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(108) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(109) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(110) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(111) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(112) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(113) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(114) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(115) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(116) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(117) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(118) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(119) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(120) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(121) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(122) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(123) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(124) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(125) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(126) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(127) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(128) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(129) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(130) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(131) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(132) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(133) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(134) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(135) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(136) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(137) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(138) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(139) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(140) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(141) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(142) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(143) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(144) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(145) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(146) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(147) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(148) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(149) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(150) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(151) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(152) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(153) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(154) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(155) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(156) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(157) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(158) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(159) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(160) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(161) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(162) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(163) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(164) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(165) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(166) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(167) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(168) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(169) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(170) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(171) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(172) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(173) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(174) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(175) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(176) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(177) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(178) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(179) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(180) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(181) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(182) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(183) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(184) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(185) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(186) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(187) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(188) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(189) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(190) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(191) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(192) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(193) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(194) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(195) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(196) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(197) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(198) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(199) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(200) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(201) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(202) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(203) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(204) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(205) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(206) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(207) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(208) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(209) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(210) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(211) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(212) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(213) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(214) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(215) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(216) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(217) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(218) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(219) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(220) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(221) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(222) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(223) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(224) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(225) label:nth-of-type(2),
+#preveri:checked ~ fieldset:nth-of-type(226) label:nth-of-type(4),
+#preveri:checked ~ fieldset:nth-of-type(227) label:nth-of-type(3),
+#preveri:checked ~ fieldset:nth-of-type(228) label:nth-of-type(1),
+#preveri:checked ~ fieldset:nth-of-type(229) label:nth-of-type(3) { background: #e3f4e3; outline: 1px solid #5cb85c; border-radius: 3px; }
+/* štetje pravilno izbranih */
+#preveri:checked ~ fieldset:nth-of-type(1) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(2) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(3) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(4) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(5) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(6) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(7) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(8) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(9) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(10) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(11) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(12) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(13) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(14) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(15) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(16) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(17) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(18) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(19) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(20) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(21) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(22) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(23) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(24) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(25) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(26) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(27) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(28) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(29) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(30) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(31) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(32) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(33) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(34) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(35) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(36) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(37) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(38) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(39) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(40) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(41) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(42) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(43) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(44) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(45) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(46) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(47) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(48) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(49) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(50) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(51) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(52) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(53) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(54) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(55) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(56) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(57) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(58) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(59) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(60) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(61) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(62) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(63) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(64) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(65) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(66) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(67) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(68) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(69) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(70) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(71) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(72) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(73) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(74) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(75) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(76) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(77) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(78) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(79) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(80) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(81) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(82) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(83) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(84) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(85) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(86) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(87) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(88) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(89) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(90) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(91) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(92) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(93) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(94) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(95) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(96) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(97) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(98) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(99) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(100) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(101) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(102) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(103) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(104) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(105) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(106) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(107) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(108) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(109) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(110) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(111) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(112) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(113) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(114) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(115) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(116) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(117) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(118) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(119) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(120) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(121) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(122) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(123) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(124) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(125) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(126) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(127) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(128) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(129) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(130) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(131) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(132) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(133) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(134) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(135) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(136) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(137) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(138) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(139) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(140) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(141) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(142) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(143) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(144) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(145) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(146) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(147) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(148) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(149) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(150) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(151) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(152) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(153) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(154) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(155) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(156) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(157) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(158) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(159) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(160) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(161) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(162) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(163) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(164) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(165) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(166) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(167) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(168) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(169) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(170) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(171) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(172) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(173) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(174) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(175) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(176) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(177) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(178) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(179) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(180) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(181) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(182) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(183) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(184) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(185) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(186) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(187) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(188) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(189) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(190) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(191) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(192) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(193) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(194) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(195) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(196) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(197) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(198) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(199) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(200) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(201) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(202) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(203) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(204) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(205) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(206) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(207) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(208) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(209) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(210) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(211) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(212) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(213) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(214) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(215) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(216) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(217) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(218) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(219) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(220) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(221) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(222) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(223) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(224) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(225) label:nth-of-type(2):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(226) label:nth-of-type(4):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(227) label:nth-of-type(3):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(228) label:nth-of-type(1):has(input:checked),
+#preveri:checked ~ fieldset:nth-of-type(229) label:nth-of-type(3):has(input:checked) { counter-increment: tocke; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>Testna stran za VUI Quiz Helper</h1>
+<p>Naloži razširitev in preveri, ali označi pravilne odgovore. 229 vprašanj iz gradiv predmeta, razvrščenih po temah. Gumb »Preveri odgovore« na dnu obarva pravilne (zeleno) in napačne (rdeče) odgovore ter prešteje točke; ponovni klik skrije rešitve.</p>
+<form>
+<input type="checkbox" id="preveri">
+
+<h2>Kaj je Lean Six Sigma (nizki prelet)</h2>
+<!-- 1 | Pravilno: a | Vir: 0 - Nizki prelet LSS, drsnica 3 -->
+<fieldset>
+<legend>1. Kateri pristop je v modelu »Kje začeti?« na nivoju 1 – Struktura?</legend>
+<label><input type="radio" name="q1" value="a"> 5S</label>
+<label><input type="radio" name="q1" value="b"> DfSS</label>
+<label><input type="radio" name="q1" value="c"> Six Sigma</label>
+<label><input type="radio" name="q1" value="d"> Kaizen</label>
+</fieldset>
+<!-- 2 | Pravilno: b | Vir: 0 - Nizki prelet LSS, drsnica 3 -->
+<fieldset>
+<legend>2. Na katerem nivoju modela »Kje začeti?« je poudarek na zmanjšanju variance in statističnih orodjih?</legend>
+<label><input type="radio" name="q2" value="a"> Nivo 2 – Pregled</label>
+<label><input type="radio" name="q2" value="b"> Nivo 4 – Zmogljivosti</label>
+<label><input type="radio" name="q2" value="c"> Nivo 3 – Stabilnost</label>
+<label><input type="radio" name="q2" value="d"> Nivo 5 – Robustnost</label>
+</fieldset>
+<!-- 3 | Pravilno: d | Vir: 0 - Nizki prelet LSS, drsnica 7 -->
+<fieldset>
+<legend>3. Kaj od naštetega NI ena od vrst potrat (waste) v Lean?</legend>
+<label><input type="radio" name="q3" value="a"> Prekomerna proizvodnja</label>
+<label><input type="radio" name="q3" value="b"> Neizrabljen potencial zaposlenih</label>
+<label><input type="radio" name="q3" value="c"> Čakanje</label>
+<label><input type="radio" name="q3" value="d"> Standardizirano delo</label>
+</fieldset>
+<!-- 4 | Pravilno: c | Vir: 0 - Nizki prelet LSS, drsnica 8; aqu.r3.u1.e1, str. 9 -->
+<fieldset>
+<legend>4. Koliko napak na milijon priložnosti (DPMO) dolgoročno pričakujemo pri procesu s stopnjo 6 sigma?</legend>
+<label><input type="radio" name="q4" value="a"> 0,02</label>
+<label><input type="radio" name="q4" value="b"> 2700</label>
+<label><input type="radio" name="q4" value="c"> 3,4</label>
+<label><input type="radio" name="q4" value="d"> 233</label>
+</fieldset>
+<!-- 5 | Pravilno: a | Vir: 0 - Nizki prelet LSS, drsnica 2 -->
+<fieldset>
+<legend>5. Kaj je cilj operativne odličnosti, h kateri stremijo nenehne izboljšave?</legend>
+<label><input type="radio" name="q5" value="a"> Izdelki in storitve najvišje kvalitete, z najnižjo ceno in v ravno pravem trenutku</label>
+<label><input type="radio" name="q5" value="b"> Čim več zaposlenih v proizvodnji</label>
+<label><input type="radio" name="q5" value="c"> Najnižja cena ne glede na dobavni rok</label>
+<label><input type="radio" name="q5" value="d"> Čim večja količina izdelkov ne glede na kakovost</label>
+</fieldset>
+<!-- 6 | Pravilno: d | Vir: 0 - Nizki prelet LSS, drsnica 5 -->
+<fieldset>
+<legend>6. Na kaj je poudarek na nivoju 2 – Kaizen?</legend>
+<label><input type="radio" name="q6" value="a"> Na zmogljivostih</label>
+<label><input type="radio" name="q6" value="b"> Na zanesljivosti in robustnem oblikovanju</label>
+<label><input type="radio" name="q6" value="c"> Na strukturi</label>
+<label><input type="radio" name="q6" value="d"> Na preglednosti in vpogledu</label>
+</fieldset>
+<!-- 7 | Pravilno: b | Vir: 0 - Nizki prelet LSS, drsnica 6 -->
+<fieldset>
+<legend>7. Na kaj je poudarek na nivoju 3 – Vitko upravljanje (Lean Management)?</legend>
+<label><input type="radio" name="q7" value="a"> Na preglednosti</label>
+<label><input type="radio" name="q7" value="b"> Na stabilnosti</label>
+<label><input type="radio" name="q7" value="c"> Na robustnosti</label>
+<label><input type="radio" name="q7" value="d"> Na strukturi delovnega okolja</label>
+</fieldset>
+<!-- 8 | Pravilno: c | Vir: 0 - Nizki prelet LSS, drsnica 9 -->
+<fieldset>
+<legend>8. Na kaj je poudarek na nivoju 5 – Oblikovanje za Six Sigma?</legend>
+<label><input type="radio" name="q8" value="a"> Na vizualnem upravljanju KPI</label>
+<label><input type="radio" name="q8" value="b"> Na strukturi</label>
+<label><input type="radio" name="q8" value="c"> Na zanesljivosti in robustnem oblikovanju</label>
+<label><input type="radio" name="q8" value="d"> Na odstranjevanju potrat</label>
+</fieldset>
+<!-- 9 | Pravilno: c | Vir: 0 - Nizki prelet LSS, drsnica 7 -->
+<fieldset>
+<legend>9. Kako je opisana potrata »Premiki, gibanje«?</legend>
+<label><input type="radio" name="q9" value="a"> Nepotrebni koraki pri izdelavi</label>
+<label><input type="radio" name="q9" value="b"> Transport surovin ali izdelkov</label>
+<label><input type="radio" name="q9" value="c"> Nepotrebno iskanje in premikanje</label>
+<label><input type="radio" name="q9" value="d"> Več, kot zahteva trg</label>
+</fieldset>
+<!-- 10 | Pravilno: b | Vir: 0 - Nizki prelet LSS, drsnica 7 -->
+<fieldset>
+<legend>10. Kako je opisana potrata »Prekomerno procesiranje«?</legend>
+<label><input type="radio" name="q10" value="a"> Nepotrebne zaloge</label>
+<label><input type="radio" name="q10" value="b"> Nepotrebni koraki pri izdelavi</label>
+<label><input type="radio" name="q10" value="c"> Čakanje na opremo v okvari</label>
+<label><input type="radio" name="q10" value="d"> Znanje delavca je neizkoriščeno</label>
+</fieldset>
+<!-- 11 | Pravilno: d | Vir: 0 - Nizki prelet LSS, drsnica 10 -->
+<fieldset>
+<legend>11. Katera industrija po pregledu uporabe uporablja predvsem TPM in Lean?</legend>
+<label><input type="radio" name="q11" value="a"> Zdravstvo</label>
+<label><input type="radio" name="q11" value="b"> Razvoj izdelkov</label>
+<label><input type="radio" name="q11" value="c"> Banke in zavarovalnice</label>
+<label><input type="radio" name="q11" value="d"> Prehrambena industrija</label>
+</fieldset>
+<!-- 12 | Pravilno: a | Vir: 0 - Nizki prelet LSS, drsnica 10 -->
+<fieldset>
+<legend>12. Kje se po pregledu uporabe uporablja oblikovanje za Six Sigma (DfSS)?</legend>
+<label><input type="radio" name="q12" value="a"> V razvoju izdelkov</label>
+<label><input type="radio" name="q12" value="b"> V storitveni industriji</label>
+<label><input type="radio" name="q12" value="c"> V bankah</label>
+<label><input type="radio" name="q12" value="d"> V prehrambeni industriji</label>
+</fieldset>
+<!-- 13 | Pravilno: b | Vir: 0 - Nizki prelet LSS, drsnica 11 -->
+<fieldset>
+<legend>13. Kdo mora po strukturi Lean Six Sigma podpirati in voditi Six Sigma?</legend>
+<label><input type="radio" name="q13" value="a"> Kupci</label>
+<label><input type="radio" name="q13" value="b"> Vodstvo</label>
+<label><input type="radio" name="q13" value="c"> Zunanji svetovalci</label>
+<label><input type="radio" name="q13" value="d"> Samo Yellow Belti</label>
+</fieldset>
+<!-- 14 | Pravilno: c | Vir: 0 - Nizki prelet LSS, drsnica 12 -->
+<fieldset>
+<legend>14. V kateri fazi programa Yellow Belt je v voznem redu uvrščena analiza FMEA?</legend>
+<label><input type="radio" name="q14" value="a"> Define</label>
+<label><input type="radio" name="q14" value="b"> Control</label>
+<label><input type="radio" name="q14" value="c"> Analyse</label>
+<label><input type="radio" name="q14" value="d"> Improve</label>
+</fieldset>
+<!-- 15 | Pravilno: d | Vir: 0 - Nizki prelet LSS, drsnica 12 -->
+<fieldset>
+<legend>15. V kateri fazi programa Yellow Belt je v voznem redu uvrščena tema Voice of the Customer (VOC) &amp; CTQ?</legend>
+<label><input type="radio" name="q15" value="a"> Control</label>
+<label><input type="radio" name="q15" value="b"> Measure</label>
+<label><input type="radio" name="q15" value="c"> Analyse</label>
+<label><input type="radio" name="q15" value="d"> Define</label>
+</fieldset>
+<!-- 16 | Pravilno: a | Vir: 0 - Nizki prelet LSS, drsnica 12 -->
+<fieldset>
+<legend>16. V kateri fazi programa Yellow Belt je v voznem redu uvrščena tema Visual Factory &amp; Quality Assurance?</legend>
+<label><input type="radio" name="q16" value="a"> Control</label>
+<label><input type="radio" name="q16" value="b"> Define</label>
+<label><input type="radio" name="q16" value="c"> Improve</label>
+<label><input type="radio" name="q16" value="d"> Measure</label>
+</fieldset>
+
+<h2>Lean načela – Toyota Production System</h2>
+<!-- 17 | Pravilno: a | Vir: 12.YB Toyota Production System, drsnica 5 -->
+<fieldset>
+<legend>17. Kaj pomeni »Muri« med tremi M-ji (Muda, Muri, Mura)?</legend>
+<label><input type="radio" name="q17" value="a"> Preobremenitev osebja ali opreme</label>
+<label><input type="radio" name="q17" value="b"> Aktivnosti brez dodane vrednosti</label>
+<label><input type="radio" name="q17" value="c"> Zaloge med koraki procesa</label>
+<label><input type="radio" name="q17" value="d"> Neenakomernost urnika ali obsega dela</label>
+</fieldset>
+<!-- 18 | Pravilno: b | Vir: 12.YB Toyota Production System, drsnica 8 -->
+<fieldset>
+<legend>18. Kaj je Heijunka?</legend>
+<label><input type="radio" name="q18" value="a"> Ustavitev procesa ob napaki</label>
+<label><input type="radio" name="q18" value="b"> Izravnavanje (nivelacija) delovnega urnika</label>
+<label><input type="radio" name="q18" value="c"> Sprejemanje odločitev s konsenzom</label>
+<label><input type="radio" name="q18" value="d"> Obisk mesta, kjer nastaja vrednost</label>
+</fieldset>
+<!-- 19 | Pravilno: c | Vir: 12.YB Toyota Production System, drsnica 9 -->
+<fieldset>
+<legend>19. Kaj omogoča načelo Jidoka (avtonomacija)?</legend>
+<label><input type="radio" name="q19" value="a"> Pregled kakovosti šele na koncu procesa</label>
+<label><input type="radio" name="q19" value="b"> Proizvodnjo glede na povpraševanje kupca</label>
+<label><input type="radio" name="q19" value="c"> Zaznavo nepravilnega stanja in takojšnjo ustavitev procesa</label>
+<label><input type="radio" name="q19" value="d"> Zmanjšanje časa menjave orodij</label>
+</fieldset>
+<!-- 20 | Pravilno: d | Vir: 12.YB Toyota Production System, drsnica 16 -->
+<fieldset>
+<legend>20. Koliko časa naj bi po načelu »Go to the Gemba« vsak višji vodja vsak dan preživel v proizvodnji?</legend>
+<label><input type="radio" name="q20" value="a"> Vsaj 10 minut</label>
+<label><input type="radio" name="q20" value="b"> Vsaj 2 uri</label>
+<label><input type="radio" name="q20" value="c"> Cel delovni dan enkrat na teden</label>
+<label><input type="radio" name="q20" value="d"> Vsaj 30 minut</label>
+</fieldset>
+<!-- 21 | Pravilno: b | Vir: 12.YB Toyota Production System, drsnica 17 -->
+<fieldset>
+<legend>21. Kaj pomeni Nemawashi?</legend>
+<label><input type="radio" name="q21" value="a"> Hitro odločanje in počasno uvajanje</label>
+<label><input type="radio" name="q21" value="b"> Počasno odločanje s konsenzom in hitro uvajanje odločitev</label>
+<label><input type="radio" name="q21" value="c"> Neprekinjena refleksija in učenje iz napak</label>
+<label><input type="radio" name="q21" value="d"> Preprečevanje napak z napravami</label>
+</fieldset>
+<!-- 22 | Pravilno: a | Vir: 12.YB Toyota Production System, drsnica 18 -->
+<fieldset>
+<legend>22. Kako se imenuje neusmiljena refleksija, s katero organizacija postane učeča se organizacija?</legend>
+<label><input type="radio" name="q22" value="a"> Hansei</label>
+<label><input type="radio" name="q22" value="b"> Poka Yoke</label>
+<label><input type="radio" name="q22" value="c"> Kaizen</label>
+<label><input type="radio" name="q22" value="d"> Kanban</label>
+</fieldset>
+<!-- 23 | Pravilno: c | Vir: 12.YB Toyota Production System, drsnica 21; 0 - Nizki prelet LSS, drsnica 6 -->
+<fieldset>
+<legend>23. Katero od naštetih NI eno od petih načel Lean (Value, Value Stream, Flow, Pull, Perfection)?</legend>
+<label><input type="radio" name="q23" value="a"> Popolnost – stalne izboljšave</label>
+<label><input type="radio" name="q23" value="b"> Pretok – implementiramo konstanten pretok</label>
+<label><input type="radio" name="q23" value="c"> Push – proizvodnja na zalogo po načrtu</label>
+<label><input type="radio" name="q23" value="d"> Pull – proizvodnja glede na povpraševanje</label>
+</fieldset>
+<!-- 24 | Pravilno: d | Vir: 12.YB Toyota Production System, drsnica 23 -->
+<fieldset>
+<legend>24. Kaj po primerjavi z »nivojem vode in skalami« razkrije probleme v procesu?</legend>
+<label><input type="radio" name="q24" value="a"> Daljši pretočni čas</label>
+<label><input type="radio" name="q24" value="b"> Povečanje velikosti serij</label>
+<label><input type="radio" name="q24" value="c"> Dvig nivoja vode (več virov)</label>
+<label><input type="radio" name="q24" value="d"> Znižanje nivoja vode (zmanjšanje zalog in virov)</label>
+</fieldset>
+<!-- 25 | Pravilno: d | Vir: 12.YB Toyota Production System, drsnica 2 -->
+<fieldset>
+<legend>25. Kaj pravi 1. načelo Lean (Long-term philosophy)?</legend>
+<label><input type="radio" name="q25" value="a"> Maksimiraj kratkoročni dobiček</label>
+<label><input type="radio" name="q25" value="b"> Proizvajaj čim več na zalogo</label>
+<label><input type="radio" name="q25" value="c"> Odločaj hitro brez posvetovanja</label>
+<label><input type="radio" name="q25" value="d"> Delaj prav za organizacijo, zaposlene, kupca in družbo kot celoto</label>
+</fieldset>
+<!-- 26 | Pravilno: c | Vir: 12.YB Toyota Production System, drsnica 3 -->
+<fieldset>
+<legend>26. Kaj zahteva 2. načelo Lean – neprekinjen tok (Continuous flow)?</legend>
+<label><input type="radio" name="q26" value="a"> Optimizirati vsako aktivnost posebej</label>
+<label><input type="radio" name="q26" value="b"> Povečati vmesne zaloge med operacijami</label>
+<label><input type="radio" name="q26" value="c"> Gledati proces kot celoto namesto ločenih aktivnosti</label>
+<label><input type="radio" name="q26" value="d"> Proizvajati v velikih serijah</label>
+</fieldset>
+<!-- 27 | Pravilno: b | Vir: 12.YB Toyota Production System, drsnica 4 -->
+<fieldset>
+<legend>27. Katera trditev o kupcih velja v Lean?</legend>
+<label><input type="radio" name="q27" value="a"> Kupca imajo samo zadnji procesi</label>
+<label><input type="radio" name="q27" value="b"> Vsak proces ima kupca in vsak proces je kupec</label>
+<label><input type="radio" name="q27" value="c"> Notranji procesi nimajo kupcev</label>
+<label><input type="radio" name="q27" value="d"> Kupec je samo zunanja stranka</label>
+</fieldset>
+<!-- 28 | Pravilno: a | Vir: 12.YB Toyota Production System, zapiski drsnice 4 -->
+<fieldset>
+<legend>28. Na kateri dva načina lahko po Lean povečamo vrednost izdelka?</legend>
+<label><input type="radio" name="q28" value="a"> Delati prav v prvo in odpravljati potrate</label>
+<label><input type="radio" name="q28" value="b"> Dvigniti ceno in povečati zaloge</label>
+<label><input type="radio" name="q28" value="c"> Povečati serije in skrajšati odmore</label>
+<label><input type="radio" name="q28" value="d"> Dodati več pregledov na koncu in več zaposlenih</label>
+</fieldset>
+<!-- 29 | Pravilno: b | Vir: 12.YB Toyota Production System, drsnica 5 -->
+<fieldset>
+<legend>29. S čim se lahko izognemo Muri (preobremenitvi)?</legend>
+<label><input type="radio" name="q29" value="a"> Z daljšimi izmenami</label>
+<label><input type="radio" name="q29" value="b"> S standardiziranim delom</label>
+<label><input type="radio" name="q29" value="c"> Z večjimi serijami</label>
+<label><input type="radio" name="q29" value="d"> S povečanjem zalog</label>
+</fieldset>
+<!-- 30 | Pravilno: d | Vir: 12.YB Toyota Production System, drsnica 5 -->
+<fieldset>
+<legend>30. S čim se lahko izognemo Mura (neenakomernosti)?</legend>
+<label><input type="radio" name="q30" value="a"> Z več nadurami</label>
+<label><input type="radio" name="q30" value="b"> S Kanbanom</label>
+<label><input type="radio" name="q30" value="c"> Z Jidoko</label>
+<label><input type="radio" name="q30" value="d"> Z izravnavanjem delovnega urnika (Heijunka)</label>
+</fieldset>
+<!-- 31 | Pravilno: c | Vir: 12.YB Toyota Production System, drsnica 6 -->
+<fieldset>
+<legend>31. Katera je posebna, osma vrsta potrate?</legend>
+<label><input type="radio" name="q31" value="a"> Transport</label>
+<label><input type="radio" name="q31" value="b"> Zaloge</label>
+<label><input type="radio" name="q31" value="c"> Neizkoriščeno znanje zaposlenih (under utilisation of staff)</label>
+<label><input type="radio" name="q31" value="d"> Čakanje</label>
+</fieldset>
+<!-- 32 | Pravilno: a | Vir: 12.YB Toyota Production System, drsnica 6 -->
+<fieldset>
+<legend>32. V katero vrsto potrate spada čakanje na diagnostične rezultate ali na posteljo?</legend>
+<label><input type="radio" name="q32" value="a"> Čakanje (Waiting)</label>
+<label><input type="radio" name="q32" value="b"> Okvare (Defects)</label>
+<label><input type="radio" name="q32" value="c"> Gibanje (Movement)</label>
+<label><input type="radio" name="q32" value="d"> Zaloge (Inventory)</label>
+</fieldset>
+<!-- 33 | Pravilno: c | Vir: 12.YB Toyota Production System, drsnica 6 -->
+<fieldset>
+<legend>33. V katero vrsto potrate spada nepravilen ali nepopoln vnos podatkov?</legend>
+<label><input type="radio" name="q33" value="a"> Prekomerna proizvodnja</label>
+<label><input type="radio" name="q33" value="b"> Neizkoriščeno znanje</label>
+<label><input type="radio" name="q33" value="c"> Okvare (Defects)</label>
+<label><input type="radio" name="q33" value="d"> Transport</label>
+</fieldset>
+<!-- 34 | Pravilno: d | Vir: 12.YB Toyota Production System, drsnica 6 -->
+<fieldset>
+<legend>34. V katero vrsto potrate spada ponovno jemanje krvnih vzorcev ali ponovno spraševanje istih vprašanj?</legend>
+<label><input type="radio" name="q34" value="a"> Čakanje</label>
+<label><input type="radio" name="q34" value="b"> Zaloge</label>
+<label><input type="radio" name="q34" value="c"> Transport</label>
+<label><input type="radio" name="q34" value="d"> Prekomerno procesiranje (Over-processing)</label>
+</fieldset>
+<!-- 35 | Pravilno: b | Vir: 12.YB Toyota Production System, drsnica 7 -->
+<fieldset>
+<legend>35. Kateri primer prikazuje načelo Pull?</legend>
+<label><input type="radio" name="q35" value="a"> Zdravila v eni posodi brez organizacije</label>
+<label><input type="radio" name="q35" value="b"> Zdravila v dveh posodah z organizacijo FIFO</label>
+<label><input type="radio" name="q35" value="c"> Proizvodnja po napovedi prodaje</label>
+<label><input type="radio" name="q35" value="d"> Naročanje zalog enkrat letno</label>
+</fieldset>
+<!-- 36 | Pravilno: a | Vir: 12.YB Toyota Production System, zapiski drsnice 7 -->
+<fieldset>
+<legend>36. Kaj je po Lean pogoj za uspešno uvedbo načela Pull?</legend>
+<label><input type="radio" name="q36" value="a"> Hitre menjave med izdelki in prilagodljiva delovna sila</label>
+<label><input type="radio" name="q36" value="b"> Centralno planiranje brez komunikacije</label>
+<label><input type="radio" name="q36" value="c"> Velike vmesne zaloge</label>
+<label><input type="radio" name="q36" value="d"> Proizvodnja v čim večjih serijah</label>
+</fieldset>
+<!-- 37 | Pravilno: d | Vir: 12.YB Toyota Production System, drsnica 8 -->
+<fieldset>
+<legend>37. Zakaj je doseganje Heijunke temeljnega pomena?</legend>
+<label><input type="radio" name="q37" value="a"> Ker skrajša čas pregleda na koncu</label>
+<label><input type="radio" name="q37" value="b"> Ker poveča zaloge</label>
+<label><input type="radio" name="q37" value="c"> Ker odpravi potrebo po standardih</label>
+<label><input type="radio" name="q37" value="d"> Ker odpravi Mura, kar je temelj za odpravo Muri in Muda</label>
+</fieldset>
+<!-- 38 | Pravilno: c | Vir: 12.YB Toyota Production System, drsnica 9 -->
+<fieldset>
+<legend>38. Kdo ima po načelu Jidoka pravico ustaviti proces ob težavi s kakovostjo?</legend>
+<label><input type="radio" name="q38" value="a"> Samo vodja proizvodnje</label>
+<label><input type="radio" name="q38" value="b"> Samo kupec</label>
+<label><input type="radio" name="q38" value="c"> Vsak zaposleni</label>
+<label><input type="radio" name="q38" value="d"> Samo oddelek kakovosti</label>
+</fieldset>
+<!-- 39 | Pravilno: b | Vir: 12.YB Toyota Production System, drsnica 10 -->
+<fieldset>
+<legend>39. Kaj velja po 6. načelu Lean (standardni postopki)?</legend>
+<label><input type="radio" name="q39" value="a"> Standard se nikoli ne spreminja</label>
+<label><input type="radio" name="q39" value="b"> Procesa ni mogoče izboljšati, dokler ni stabiliziran in standardiziran</label>
+<label><input type="radio" name="q39" value="c"> Standardi zavirajo izboljšave</label>
+<label><input type="radio" name="q39" value="d"> Vsak zaposleni naj dela po svoje</label>
+</fieldset>
+<!-- 40 | Pravilno: a | Vir: 12.YB Toyota Production System, drsnica 12 -->
+<fieldset>
+<legend>40. Kaj velja za novo tehnologijo po 8. načelu Lean?</legend>
+<label><input type="radio" name="q40" value="a"> Pred uporabo mora biti preizkušena in dokazana</label>
+<label><input type="radio" name="q40" value="b"> Uvesti jo je treba čim prej, tudi nepreizkušeno</label>
+<label><input type="radio" name="q40" value="c"> Uporablja se samo v proizvodnji</label>
+<label><input type="radio" name="q40" value="d"> Nadomestiti mora ljudi</label>
+</fieldset>
+<!-- 41 | Pravilno: a | Vir: 12.YB Toyota Production System, drsnica 14 -->
+<fieldset>
+<legend>41. Kaj je po 10. načelu Lean (razvoj zaposlenih) prva prioriteta?</legend>
+<label><input type="radio" name="q41" value="a"> Varnost</label>
+<label><input type="radio" name="q41" value="b"> Količina proizvodnje</label>
+<label><input type="radio" name="q41" value="c"> Hitrost</label>
+<label><input type="radio" name="q41" value="d"> Dobiček</label>
+</fieldset>
+<!-- 42 | Pravilno: d | Vir: 12.YB Toyota Production System, drsnica 15 -->
+<fieldset>
+<legend>42. Kako naj organizacija po 11. načelu Lean obravnava dobavitelje?</legend>
+<label><input type="radio" name="q42" value="a"> Samo po najnižji ceni</label>
+<label><input type="radio" name="q42" value="b"> Brez sodelovanja</label>
+<label><input type="radio" name="q42" value="c"> Kot konkurente</label>
+<label><input type="radio" name="q42" value="d"> Kot razširitev lastne organizacije, ki jo izzivamo in ji pomagamo</label>
+</fieldset>
+<!-- 43 | Pravilno: b | Vir: 12.YB Toyota Production System, drsnica 16 -->
+<fieldset>
+<legend>43. Kaj zahteva načelo »Go to the Gemba«?</legend>
+<label><input type="radio" name="q43" value="a"> Delegirati opazovanje zunanjim svetovalcem</label>
+<label><input type="radio" name="q43" value="b"> Iti k viru, opazovati in preveriti podatke</label>
+<label><input type="radio" name="q43" value="c"> Odločati samo na podlagi računalniških podatkov</label>
+<label><input type="radio" name="q43" value="d"> Teoretizirati na podlagi poročil</label>
+</fieldset>
+<!-- 44 | Pravilno: c | Vir: 12.YB Toyota Production System, drsnica 18 -->
+<fieldset>
+<legend>44. Kaj se zgodi po 14. načelu Lean, ko pride do težave?</legend>
+<label><input type="radio" name="q44" value="a"> Težavo se skrije</label>
+<label><input type="radio" name="q44" value="b"> Krivca se javno kaznuje</label>
+<label><input type="radio" name="q44" value="c"> Vodja javno prevzame krivdo, oddelek pa rešuje težavo</label>
+<label><input type="radio" name="q44" value="d"> Rešitev se prepusti kupcu</label>
+</fieldset>
+<!-- 45 | Pravilno: b | Vir: 12.YB Toyota Production System, drsnica 19 -->
+<fieldset>
+<legend>45. Katero geslo velja za Kaizen?</legend>
+<label><input type="radio" name="q45" value="a"> Hitreje je vedno bolje</label>
+<label><input type="radio" name="q45" value="b"> Danes naredimo nekaj bolje kot včeraj</label>
+<label><input type="radio" name="q45" value="c"> Če deluje, ne spreminjaj</label>
+<label><input type="radio" name="q45" value="d"> Kakovost preverimo na koncu</label>
+</fieldset>
+<!-- 46 | Pravilno: a | Vir: 12.YB Toyota Production System, drsnice 2–18 -->
+<fieldset>
+<legend>46. Koliko načel Lean (Toyota) je predstavljenih v gradivu?</legend>
+<label><input type="radio" name="q46" value="a"> 14</label>
+<label><input type="radio" name="q46" value="b"> 5</label>
+<label><input type="radio" name="q46" value="c"> 8</label>
+<label><input type="radio" name="q46" value="d"> 10</label>
+</fieldset>
+<!-- 47 | Pravilno: c | Vir: 12.YB Toyota Production System, drsnica 23 -->
+<fieldset>
+<legend>47. Kaj od naštetega NI ena od »skal« (problemov), ki jih razkrije znižanje nivoja vode?</legend>
+<label><input type="radio" name="q47" value="a"> Dolg čas nastavitve (set-up)</label>
+<label><input type="radio" name="q47" value="b"> Izpadi opreme</label>
+<label><input type="radio" name="q47" value="c"> Visoka motivacija zaposlenih</label>
+<label><input type="radio" name="q47" value="d"> Slabo planiranje</label>
+</fieldset>
+<!-- 48 | Pravilno: d | Vir: 12.YB Toyota Production System, drsnica 23 -->
+<fieldset>
+<legend>48. Zakaj je treba v Lean znižati »nivo vode«?</legend>
+<label><input type="radio" name="q48" value="a"> Da se skrijejo problemi</label>
+<label><input type="radio" name="q48" value="b"> Da se poveča WIP</label>
+<label><input type="radio" name="q48" value="c"> Da se povečajo zaloge</label>
+<label><input type="radio" name="q48" value="d"> Da se skrajša pretočni čas in razkrijejo problemi</label>
+</fieldset>
+
+<h2>Kartiranje procesa in toka vrednosti (VSM)</h2>
+<!-- 49 | Pravilno: c | Vir: 21.YB Process & VSM, drsnica 2 -->
+<fieldset>
+<legend>49. Kako je definiran proces?</legend>
+<label><input type="radio" name="q49" value="a"> Dokument z navodili za delo</label>
+<label><input type="radio" name="q49" value="b"> Skupina ljudi, ki dela v istem oddelku</label>
+<label><input type="radio" name="q49" value="c"> Sistematično zaporedje aktivnosti, potrebnih za dosego cilja</label>
+<label><input type="radio" name="q49" value="d"> Seznam ključnih kazalnikov uspešnosti</label>
+</fieldset>
+<!-- 50 | Pravilno: d | Vir: 21.YB Process & VSM, drsnica 6 -->
+<fieldset>
+<legend>50. Kaj velja za odločitveno točko v diagramu poteka?</legend>
+<label><input type="radio" name="q50" value="a"> Označuje začetek ali konec procesa</label>
+<label><input type="radio" name="q50" value="b"> Vedno se začne z glagolom</label>
+<label><input type="radio" name="q50" value="c"> Prikazuje smer toka</label>
+<label><input type="radio" name="q50" value="d"> Iz nje izhajata vsaj dve poti, običajno Da in Ne</label>
+</fieldset>
+<!-- 51 | Pravilno: b | Vir: 21.YB Process & VSM, drsnica 7 -->
+<fieldset>
+<legend>51. Katera NI ena od treh interpretacij procesa?</legend>
+<label><input type="radio" name="q51" value="a"> Proces, kakršen bi moral biti</label>
+<label><input type="radio" name="q51" value="b"> Proces, kakršen je bil pred desetimi leti</label>
+<label><input type="radio" name="q51" value="c"> Proces, kakršen mislite, da je</label>
+<label><input type="radio" name="q51" value="d"> Proces, kakršen dejansko je</label>
+</fieldset>
+<!-- 52 | Pravilno: a | Vir: 21.YB Process & VSM, drsnica 10 -->
+<fieldset>
+<legend>52. Kaj prikazuje špagetni diagram?</legend>
+<label><input type="radio" name="q52" value="a"> Gibanje ljudi ali materiala po prostoru</label>
+<label><input type="radio" name="q52" value="b"> Odgovornosti oddelkov v ločenih pasovih</label>
+<label><input type="radio" name="q52" value="c"> Porazdelitev podatkov</label>
+<label><input type="radio" name="q52" value="d"> Razmerje med dvema spremenljivkama</label>
+</fieldset>
+<!-- 53 | Pravilno: a | Vir: 21.YB Process & VSM, drsnica 13 -->
+<fieldset>
+<legend>53. Kaj je »vrednost« (Value) pri kartiranju toka vrednosti?</legend>
+<label><input type="radio" name="q53" value="a"> Aktivnosti, za katere je kupec pripravljen plačati</label>
+<label><input type="radio" name="q53" value="b"> Aktivnosti, ki jih izvaja vodstvo</label>
+<label><input type="radio" name="q53" value="c"> Aktivnosti z najvišjimi stroški</label>
+<label><input type="radio" name="q53" value="d"> Vse aktivnosti, ki so potrebne za proces</label>
+</fieldset>
+<!-- 54 | Pravilno: b | Vir: 21.YB Process & VSM, drsnica 14 -->
+<fieldset>
+<legend>54. Katera trditev velja za aktivnost z dodano vrednostjo?</legend>
+<label><input type="radio" name="q54" value="a"> Kupec je zanjo ne želi plačati, a je nujna za proces</label>
+<label><input type="radio" name="q54" value="b"> Mora biti narejena prav v prvo in mora spremeniti izdelek ali storitev</label>
+<label><input type="radio" name="q54" value="c"> Vedno vključuje transport</label>
+<label><input type="radio" name="q54" value="d"> Izvaja se samo na koncu procesa</label>
+</fieldset>
+<!-- 55 | Pravilno: d | Vir: 21.YB Process & VSM, drsnica 16 -->
+<fieldset>
+<legend>55. Kje začnemo pri izdelavi karte trenutnega stanja (VSM)?</legend>
+<label><input type="radio" name="q55" value="a"> Pri standardnih časih iz dokumentacije</label>
+<label><input type="radio" name="q55" value="b"> Na začetku toka vrednosti, pri dobavitelju</label>
+<label><input type="radio" name="q55" value="c"> Pri najpočasnejšem koraku</label>
+<label><input type="radio" name="q55" value="d"> Na koncu toka vrednosti, nato se pomikamo navzgor po toku</label>
+</fieldset>
+<!-- 56 | Pravilno: c | Vir: 21.YB Process & VSM, drsnica 20 -->
+<fieldset>
+<legend>56. Kako izračunamo odstotek časa z dodano vrednostjo?</legend>
+<label><input type="radio" name="q56" value="a"> čas čakanja / pretočni čas × 100 %</label>
+<label><input type="radio" name="q56" value="b"> pretočni čas / čas z dodano vrednostjo × 100 %</label>
+<label><input type="radio" name="q56" value="c"> čas z dodano vrednostjo / pretočni čas × 100 %</label>
+<label><input type="radio" name="q56" value="d"> čas z dodano vrednostjo / takt × 100 %</label>
+</fieldset>
+<!-- 57 | Pravilno: d | Vir: 21.YB Process & VSM, drsnica 20 -->
+<fieldset>
+<legend>57. Čas z dodano vrednostjo je 279 min, pretočni čas pa 433 min. Koliko je odstotek časa z dodano vrednostjo?</legend>
+<label><input type="radio" name="q57" value="a"> 0,12 %</label>
+<label><input type="radio" name="q57" value="b"> 36 %</label>
+<label><input type="radio" name="q57" value="c"> 155 %</label>
+<label><input type="radio" name="q57" value="d"> 64 %</label>
+</fieldset>
+<!-- 58 | Pravilno: a | Vir: 21.YB Process & VSM, drsnica 4 -->
+<fieldset>
+<legend>58. Kaj je slabost razmišljanja po oddelkih?</legend>
+<label><input type="radio" name="q58" value="a"> Delo v teku (WIP) se »meče čez ograjo« (miselnost otoka)</label>
+<label><input type="radio" name="q58" value="b"> Manj zalog</label>
+<label><input type="radio" name="q58" value="c"> Hitrejši pretok</label>
+<label><input type="radio" name="q58" value="d"> Boljša komunikacija med oddelki</label>
+</fieldset>
+<!-- 59 | Pravilno: c | Vir: 21.YB Process & VSM, drsnica 5 -->
+<fieldset>
+<legend>59. Kaj od naštetega je razlog za izdelavo zemljevida procesa?</legend>
+<label><input type="radio" name="q59" value="a"> Povečanje zalog</label>
+<label><input type="radio" name="q59" value="b"> Skrivanje problemov</label>
+<label><input type="radio" name="q59" value="c"> Dokumentiranje in standardizacija procesov (ISO 9000)</label>
+<label><input type="radio" name="q59" value="d"> Zmanjšanje števila kupcev</label>
+</fieldset>
+<!-- 60 | Pravilno: b | Vir: 21.YB Process & VSM, drsnica 6 -->
+<fieldset>
+<legend>60. S čim naj se začne opis aktivnosti v diagramu poteka?</legend>
+<label><input type="radio" name="q60" value="a"> S številko</label>
+<label><input type="radio" name="q60" value="b"> Z glagolom</label>
+<label><input type="radio" name="q60" value="c"> Z imenom oddelka</label>
+<label><input type="radio" name="q60" value="d"> S samostalnikom</label>
+</fieldset>
+<!-- 61 | Pravilno: d | Vir: 21.YB Process & VSM, drsnica 6 -->
+<fieldset>
+<legend>61. Kaj mora imeti diagram poteka?</legend>
+<label><input type="radio" name="q61" value="a"> Vsaj deset odločitvenih točk</label>
+<label><input type="radio" name="q61" value="b"> Časovno os</label>
+<label><input type="radio" name="q61" value="c"> Samo aktivnosti brez puščic</label>
+<label><input type="radio" name="q61" value="d"> Jasen začetek (start) in konec (stop)</label>
+</fieldset>
+<!-- 62 | Pravilno: b | Vir: 21.YB Process & VSM, drsnica 8 -->
+<fieldset>
+<legend>62. Kje se konča proces v primeru obiska ambulante?</legend>
+<label><input type="radio" name="q62" value="a"> Ko medicinska sestra izmeri vitalne znake</label>
+<label><input type="radio" name="q62" value="b"> Ko pacient zapusti ambulanto</label>
+<label><input type="radio" name="q62" value="c"> Ko zdravnik pregleda karton</label>
+<label><input type="radio" name="q62" value="d"> Ko se pacient prijavi</label>
+</fieldset>
+<!-- 63 | Pravilno: c | Vir: 21.YB Process & VSM, drsnica 9 -->
+<fieldset>
+<legend>63. Kako postopamo pri kartiranju procesa?</legend>
+<label><input type="radio" name="q63" value="a"> Zemljevida ne rišemo, samo merimo</label>
+<label><input type="radio" name="q63" value="b"> Najprej najpodrobnejši zemljevid celotne organizacije</label>
+<label><input type="radio" name="q63" value="c"> Najprej globalni zemljevid glavnih aktivnosti, nato podroben zemljevid problematičnega območja</label>
+<label><input type="radio" name="q63" value="d"> Samo podroben zemljevid</label>
+</fieldset>
+<!-- 64 | Pravilno: a | Vir: 21.YB Process & VSM, drsnica 11 -->
+<fieldset>
+<legend>64. Kaj prikazuje »swimlane« diagram (npr. MRI pacienta)?</legend>
+<label><input type="radio" name="q64" value="a"> Različna področja ali procese, skozi katere gre pacient</label>
+<label><input type="radio" name="q64" value="b"> Gibanje po laboratoriju</label>
+<label><input type="radio" name="q64" value="c"> Razmerje med dvema spremenljivkama</label>
+<label><input type="radio" name="q64" value="d"> Porazdelitev podatkov</label>
+</fieldset>
+<!-- 65 | Pravilno: d | Vir: 21.YB Process & VSM, zapiski drsnice 10 -->
+<fieldset>
+<legend>65. Na kakšen način nastane špagetni diagram?</legend>
+<label><input type="radio" name="q65" value="a"> Iz finančnih poročil</label>
+<label><input type="radio" name="q65" value="b"> Iz standardnih časov v dokumentaciji</label>
+<label><input type="radio" name="q65" value="c"> Z anketo zaposlenih</label>
+<label><input type="radio" name="q65" value="d"> Z opazovanjem dejanskih premikov, vsak premik je zapisan kot ločena črta</label>
+</fieldset>
+<!-- 66 | Pravilno: c | Vir: 21.YB Process & VSM, drsnica 14 -->
+<fieldset>
+<legend>66. V katere tri kategorije razvrstimo aktivnosti v procesu?</legend>
+<label><input type="radio" name="q66" value="a"> Notranje, zunanje in mešane</label>
+<label><input type="radio" name="q66" value="b"> Hitre, počasne in srednje</label>
+<label><input type="radio" name="q66" value="c"> Z dodano vrednostjo, brez dodane vrednosti in omogočitvene (enabling)</label>
+<label><input type="radio" name="q66" value="d"> Ročne, avtomatske in pol-avtomatske</label>
+</fieldset>
+<!-- 67 | Pravilno: b | Vir: 21.YB Process & VSM, drsnica 14 -->
+<fieldset>
+<legend>67. Kaj je omogočitvena (enabling) aktivnost?</legend>
+<label><input type="radio" name="q67" value="a"> Aktivnost, za katero kupec rad plača</label>
+<label><input type="radio" name="q67" value="b"> Aktivnost, ki je nujna za proces, čeprav je kupec ne želi plačati</label>
+<label><input type="radio" name="q67" value="c"> Aktivnost, ki jo lahko vedno odstranimo</label>
+<label><input type="radio" name="q67" value="d"> Aktivnost, ki spremeni izdelek</label>
+</fieldset>
+<!-- 68 | Pravilno: a | Vir: 21.YB Process & VSM, drsnica 15 -->
+<fieldset>
+<legend>68. Kaj pomeni tok vrednosti »od vrat do vrat« (door-to-door)?</legend>
+<label><input type="radio" name="q68" value="a"> Vse aktivnosti od prejema surovin do dostave izdelka kupcu</label>
+<label><input type="radio" name="q68" value="b"> Samo pot do skladišča</label>
+<label><input type="radio" name="q68" value="c"> Samo administrativne aktivnosti</label>
+<label><input type="radio" name="q68" value="d"> Samo en korak procesa</label>
+</fieldset>
+<!-- 69 | Pravilno: b | Vir: 21.YB Process & VSM, zapiski drsnice 15 -->
+<fieldset>
+<legend>69. S čim običajno začnemo kartiranje toka vrednosti?</legend>
+<label><input type="radio" name="q69" value="a"> Z dobaviteljevimi procesi</label>
+<label><input type="radio" name="q69" value="b"> Z najpomembnejšim izdelkom ali skupino izdelkov</label>
+<label><input type="radio" name="q69" value="c"> Z najmanj prodajanim izdelkom</label>
+<label><input type="radio" name="q69" value="d"> Z vsemi izdelki hkrati</label>
+</fieldset>
+<!-- 70 | Pravilno: a | Vir: 21.YB Process & VSM, drsnica 16 -->
+<fieldset>
+<legend>70. Katere čase uporabimo pri izdelavi karte trenutnega stanja?</legend>
+<label><input type="radio" name="q70" value="a"> Dejanske čase, izmerjene s štoparico</label>
+<label><input type="radio" name="q70" value="b"> Ocene vodstva</label>
+<label><input type="radio" name="q70" value="c"> Standardne čase iz dokumentacije</label>
+<label><input type="radio" name="q70" value="d"> Čase iz ponudbe</label>
+</fieldset>
+<!-- 71 | Pravilno: c | Vir: 21.YB Process & VSM, drsnici 18 in 21 -->
+<fieldset>
+<legend>71. Koliko je skupni pretočni čas v primeru oskrbe s krvjo (transfuzijska služba)?</legend>
+<label><input type="radio" name="q71" value="a"> 3 dni</label>
+<label><input type="radio" name="q71" value="b"> 433 minut</label>
+<label><input type="radio" name="q71" value="c"> 18 dni</label>
+<label><input type="radio" name="q71" value="d"> 30 minut</label>
+</fieldset>
+<!-- 72 | Pravilno: d | Vir: 21.YB Process & VSM, drsnici 18 in 21 -->
+<fieldset>
+<legend>72. Koliko časa z dodano vrednostjo ima primer oskrbe s krvjo?</legend>
+<label><input type="radio" name="q72" value="a"> 279 minut</label>
+<label><input type="radio" name="q72" value="b"> 18 dni</label>
+<label><input type="radio" name="q72" value="c"> 2 dni</label>
+<label><input type="radio" name="q72" value="d"> 30 minut</label>
+</fieldset>
+<!-- 73 | Pravilno: b | Vir: 21.YB Process & VSM, zapiski drsnice 20 -->
+<fieldset>
+<legend>73. Če je odstotek časa z dodano vrednostjo 64 %, kolikšen del procesa je potrata?</legend>
+<label><input type="radio" name="q73" value="a"> 64 %</label>
+<label><input type="radio" name="q73" value="b"> 36 %</label>
+<label><input type="radio" name="q73" value="c"> 100 %</label>
+<label><input type="radio" name="q73" value="d"> 0 %</label>
+</fieldset>
+<!-- 74 | Pravilno: c | Vir: 21.YB Process & VSM, drsnica 22 -->
+<fieldset>
+<legend>74. Kaj je izhodišče za izdelavo karte prihodnjega stanja?</legend>
+<label><input type="radio" name="q74" value="a"> Trenutne zaloge</label>
+<label><input type="radio" name="q74" value="b"> Obstoječi standardni časi</label>
+<label><input type="radio" name="q74" value="c"> Potrebe kupca, vključno z zahtevami po kakovosti in pretočnem času</label>
+<label><input type="radio" name="q74" value="d"> Želje dobaviteljev</label>
+</fieldset>
+<!-- 75 | Pravilno: a | Vir: 21.YB Process & VSM, zapiski drsnice 22 -->
+<fieldset>
+<legend>75. Kako so v primeru prihodnjega stanja oskrbe s krvjo predvidene izboljšave?</legend>
+<label><input type="radio" name="q75" value="a"> S številnimi projekti oz. dogodki Kaizen in dobavo iz strukturirane zaloge (Kanban)</label>
+<label><input type="radio" name="q75" value="b"> Z daljšimi dobavnimi roki</label>
+<label><input type="radio" name="q75" value="c"> S povečanjem vmesnih zalog</label>
+<label><input type="radio" name="q75" value="d"> Z enim velikim nakupom opreme</label>
+</fieldset>
+<!-- 76 | Pravilno: d | Vir: 21.YB Process & VSM, zapiski drsnice 24 -->
+<fieldset>
+<legend>76. Kolikšen je pretočni čas v primeru prihodnjega stanja za naročanje pacientov na termine?</legend>
+<label><input type="radio" name="q76" value="a"> 2 tedna</label>
+<label><input type="radio" name="q76" value="b"> 18 dni</label>
+<label><input type="radio" name="q76" value="c"> 433 minut</label>
+<label><input type="radio" name="q76" value="d"> Največ 3 dni</label>
+</fieldset>
+
+<h2>Osnovna statistika, vrste podatkov in vzorčenje</h2>
+<!-- 77 | Pravilno: c | Vir: 22.YB Basic Statistics, drsnica 2 -->
+<fieldset>
+<legend>77. Za katero vrsto podatkov velja, da imajo naravni vrstni red, razlik med njimi pa ni mogoče kvantificirati?</legend>
+<label><input type="radio" name="q77" value="a"> Nominalni</label>
+<label><input type="radio" name="q77" value="b"> Razmernostni</label>
+<label><input type="radio" name="q77" value="c"> Ordinalni</label>
+<label><input type="radio" name="q77" value="d"> Intervalni</label>
+</fieldset>
+<!-- 78 | Pravilno: a | Vir: 22.YB Basic Statistics, drsnica 2 -->
+<fieldset>
+<legend>78. Kaj razmernostno (ratio) lestvico loči od intervalne?</legend>
+<label><input type="radio" name="q78" value="a"> Ima absolutno ničlo</label>
+<label><input type="radio" name="q78" value="b"> Nima naravnega vrstnega reda</label>
+<label><input type="radio" name="q78" value="c"> Uporablja se samo za kategorije</label>
+<label><input type="radio" name="q78" value="d"> Razlik ni mogoče primerjati</label>
+</fieldset>
+<!-- 79 | Pravilno: b | Vir: 22.YB Basic Statistics, drsnica 5 -->
+<fieldset>
+<legend>79. Kateri primer predstavlja diskretne (števne) podatke?</legend>
+<label><input type="radio" name="q79" value="a"> Dolžina gredi</label>
+<label><input type="radio" name="q79" value="b"> Število pacientov</label>
+<label><input type="radio" name="q79" value="c"> Teža pacienta</label>
+<label><input type="radio" name="q79" value="d"> Čas čakanja</label>
+</fieldset>
+<!-- 80 | Pravilno: d | Vir: 22.YB Basic Statistics, drsnica 14 -->
+<fieldset>
+<legend>80. Koliko je mediana podatkov {3, 5, 4, 7, 5}?</legend>
+<label><input type="radio" name="q80" value="a"> 4</label>
+<label><input type="radio" name="q80" value="b"> 7</label>
+<label><input type="radio" name="q80" value="c"> 4,8</label>
+<label><input type="radio" name="q80" value="d"> 5</label>
+</fieldset>
+<!-- 81 | Pravilno: d | Vir: 22.YB Basic Statistics, drsnica 17 -->
+<fieldset>
+<legend>81. Koliko je razpon (R) podatkov {2, 3, 4, 5, 3, 7}?</legend>
+<label><input type="radio" name="q81" value="a"> 7</label>
+<label><input type="radio" name="q81" value="b"> 2</label>
+<label><input type="radio" name="q81" value="c"> 4</label>
+<label><input type="radio" name="q81" value="d"> 5</label>
+</fieldset>
+<!-- 82 | Pravilno: a | Vir: 22.YB Basic Statistics, drsnica 16 -->
+<fieldset>
+<legend>82. Kako je definiran standardni odklon (s)?</legend>
+<label><input type="radio" name="q82" value="a"> Kvadratni koren variance</label>
+<label><input type="radio" name="q82" value="b"> Srednja vrednost urejenih podatkov</label>
+<label><input type="radio" name="q82" value="c"> Povprečna kvadratna razdalja od povprečja</label>
+<label><input type="radio" name="q82" value="d"> Razlika med največjo in najmanjšo vrednostjo</label>
+</fieldset>
+<!-- 83 | Pravilno: b | Vir: 22.YB Basic Statistics, drsnica 3 -->
+<fieldset>
+<legend>83. Katera vrsta podatkov so »meseci v letu« (12 možnih izidov)?</legend>
+<label><input type="radio" name="q83" value="a"> Zvezni</label>
+<label><input type="radio" name="q83" value="b"> Kategorični (nominalni)</label>
+<label><input type="radio" name="q83" value="c"> Intervalni</label>
+<label><input type="radio" name="q83" value="d"> Ordinalni</label>
+</fieldset>
+<!-- 84 | Pravilno: c | Vir: 22.YB Basic Statistics, drsnica 3 -->
+<fieldset>
+<legend>84. Katera vrsta podatkov je ocena storitve na lestvici 1 – zelo slabo do 5 – odlično?</legend>
+<label><input type="radio" name="q84" value="a"> Nominalni</label>
+<label><input type="radio" name="q84" value="b"> Razmernostni</label>
+<label><input type="radio" name="q84" value="c"> Ordinalni</label>
+<label><input type="radio" name="q84" value="d"> Zvezni</label>
+</fieldset>
+<!-- 85 | Pravilno: d | Vir: 22.YB Basic Statistics, drsnica 4 -->
+<fieldset>
+<legend>85. Katera vrsta podatkov so barve tablet v klinični študiji?</legend>
+<label><input type="radio" name="q85" value="a"> Razmernostni</label>
+<label><input type="radio" name="q85" value="b"> Intervalni</label>
+<label><input type="radio" name="q85" value="c"> Ordinalni</label>
+<label><input type="radio" name="q85" value="d"> Nominalni</label>
+</fieldset>
+<!-- 86 | Pravilno: c | Vir: 22.YB Basic Statistics, drsnica 2 -->
+<fieldset>
+<legend>86. Katera vrsta podatkov je temperatura v operacijski dvorani?</legend>
+<label><input type="radio" name="q86" value="a"> Kategorični</label>
+<label><input type="radio" name="q86" value="b"> Ordinalni</label>
+<label><input type="radio" name="q86" value="c"> Intervalni</label>
+<label><input type="radio" name="q86" value="d"> Nominalni</label>
+</fieldset>
+<!-- 87 | Pravilno: a | Vir: 22.YB Basic Statistics, drsnica 2 -->
+<fieldset>
+<legend>87. Katera trditev opisuje razmernostne podatke (»pacient s 140 kg je 2-krat težji od pacienta z 69 kg«)?</legend>
+<label><input type="radio" name="q87" value="a"> Imajo naravni vrstni red, razlike je mogoče primerjati in obstaja ničla</label>
+<label><input type="radio" name="q87" value="b"> Imajo vrstni red, razlik pa ni mogoče kvantificirati</label>
+<label><input type="radio" name="q87" value="c"> Nimajo naravnega vrstnega reda</label>
+<label><input type="radio" name="q87" value="d"> So vedno kategorični</label>
+</fieldset>
+<!-- 88 | Pravilno: b | Vir: 22.YB Basic Statistics, drsnica 5 -->
+<fieldset>
+<legend>88. Kateri primer predstavlja zvezne (merljive) podatke?</legend>
+<label><input type="radio" name="q88" value="a"> Meseci v letu</label>
+<label><input type="radio" name="q88" value="b"> Dolžina, čas, teža</label>
+<label><input type="radio" name="q88" value="c"> Barva tablet</label>
+<label><input type="radio" name="q88" value="d"> Število pacientov</label>
+</fieldset>
+<!-- 89 | Pravilno: b | Vir: 22.YB Basic Statistics, drsnica 10 -->
+<fieldset>
+<legend>89. Kaj je vzorčenje (sampling)?</legend>
+<label><input type="radio" name="q89" value="a"> Merjenje celotne populacije</label>
+<label><input type="radio" name="q89" value="b"> Izbira podmnožice elementov iz populacije</label>
+<label><input type="radio" name="q89" value="c"> Risanje histograma</label>
+<label><input type="radio" name="q89" value="d"> Izračun standardnega odklona</label>
+</fieldset>
+<!-- 90 | Pravilno: c | Vir: 22.YB Basic Statistics, drsnica 10 -->
+<fieldset>
+<legend>90. Kaj je populacija?</legend>
+<label><input type="radio" name="q90" value="a"> Podmnožica izbranih elementov</label>
+<label><input type="radio" name="q90" value="b"> Ena meritev</label>
+<label><input type="radio" name="q90" value="c"> Celotna množica elementov, katerih lastnosti želimo preučiti</label>
+<label><input type="radio" name="q90" value="d"> Povprečje vzorca</label>
+</fieldset>
+<!-- 91 | Pravilno: d | Vir: 22.YB Basic Statistics, drsnica 12 -->
+<fieldset>
+<legend>91. Kaj od naštetega NI pogoj, pod katerim lahko sprejmemo variacijo procesa?</legend>
+<label><input type="radio" name="q91" value="a"> Proces je stabilen skozi čas</label>
+<label><input type="radio" name="q91" value="b"> Celotna variacija je majhna v primerjavi s specifikacijo</label>
+<label><input type="radio" name="q91" value="c"> Povprečje procesa je na ciljni vrednosti</label>
+<label><input type="radio" name="q91" value="d"> Proces ima veliko osamelcev (outliers)</label>
+</fieldset>
+<!-- 92 | Pravilno: a | Vir: 22.YB Basic Statistics, drsnica 13 -->
+<fieldset>
+<legend>92. Kateri dve komponenti opisujeta variacijo procesa?</legend>
+<label><input type="radio" name="q92" value="a"> Središče (centre) in raztros (spread)</label>
+<label><input type="radio" name="q92" value="b"> Vhod in izhod</label>
+<label><input type="radio" name="q92" value="c"> Kupec in dobavitelj</label>
+<label><input type="radio" name="q92" value="d"> Cena in čas</label>
+</fieldset>
+<!-- 93 | Pravilno: b | Vir: 22.YB Basic Statistics, zapiski drsnice 11 -->
+<fieldset>
+<legend>93. Kako imenujemo točke izven kontrolnih mej, ki kažejo, da proces ni pod nadzorom?</legend>
+<label><input type="radio" name="q93" value="a"> Kvartili</label>
+<label><input type="radio" name="q93" value="b"> Osamelci oz. posebni vzroki (special causes)</label>
+<label><input type="radio" name="q93" value="c"> Mediane</label>
+<label><input type="radio" name="q93" value="d"> Splošni vzroki</label>
+</fieldset>
+<!-- 94 | Pravilno: a | Vir: 22.YB Basic Statistics, drsnica 15 -->
+<fieldset>
+<legend>94. Koliko je aritmetična sredina podatkov {2, 3, 4, 5, 3, 10}?</legend>
+<label><input type="radio" name="q94" value="a"> 4,5</label>
+<label><input type="radio" name="q94" value="b"> 4</label>
+<label><input type="radio" name="q94" value="c"> 3,5</label>
+<label><input type="radio" name="q94" value="d"> 5</label>
+</fieldset>
+<!-- 95 | Pravilno: c | Vir: 22.YB Basic Statistics, drsnica 15 -->
+<fieldset>
+<legend>95. Koliko je mediana podatkov {2, 3, 4, 5, 3, 10}?</legend>
+<label><input type="radio" name="q95" value="a"> 4,5</label>
+<label><input type="radio" name="q95" value="b"> 3</label>
+<label><input type="radio" name="q95" value="c"> 3,5</label>
+<label><input type="radio" name="q95" value="d"> 4</label>
+</fieldset>
+<!-- 96 | Pravilno: d | Vir: 22.YB Basic Statistics, drsnica 14 -->
+<fieldset>
+<legend>96. Koliko je aritmetična sredina podatkov {3, 5, 4, 7, 5}?</legend>
+<label><input type="radio" name="q96" value="a"> 5,2</label>
+<label><input type="radio" name="q96" value="b"> 5</label>
+<label><input type="radio" name="q96" value="c"> 4</label>
+<label><input type="radio" name="q96" value="d"> 4,8</label>
+</fieldset>
+<!-- 97 | Pravilno: c | Vir: 22.YB Basic Statistics, drsnica 16 -->
+<fieldset>
+<legend>97. Kako je definirana varianca (s²)?</legend>
+<label><input type="radio" name="q97" value="a"> Kvadratni koren standardnega odklona</label>
+<label><input type="radio" name="q97" value="b"> Srednja vrednost urejenih podatkov</label>
+<label><input type="radio" name="q97" value="c"> Povprečna kvadratna razdalja od povprečja</label>
+<label><input type="radio" name="q97" value="d"> Razlika med največjo in najmanjšo vrednostjo</label>
+</fieldset>
+<!-- 98 | Pravilno: b | Vir: 22.YB Basic Statistics, drsnica 18 -->
+<fieldset>
+<legend>98. S katerima parametroma je določena normalna (Gaussova) porazdelitev?</legend>
+<label><input type="radio" name="q98" value="a"> Z modusom in varianco vzorca</label>
+<label><input type="radio" name="q98" value="b"> S povprečjem μ in standardnim odklonom σ</label>
+<label><input type="radio" name="q98" value="c"> Z minimumom in maksimumom</label>
+<label><input type="radio" name="q98" value="d"> Z mediano in razponom</label>
+</fieldset>
+
+<h2>Vizualizacija podatkov in vizualno upravljanje</h2>
+<!-- 99 | Pravilno: a | Vir: 24.YB Visualisation, drsnica 3 -->
+<fieldset>
+<legend>99. Katero pravilo je osnova Paretovega diagrama?</legend>
+<label><input type="radio" name="q99" value="a"> 80 % problemov povzroči 20 % dejavnikov</label>
+<label><input type="radio" name="q99" value="b"> 50 % problemov povzroči 50 % dejavnikov</label>
+<label><input type="radio" name="q99" value="c"> 20 % problemov povzroči 80 % dejavnikov</label>
+<label><input type="radio" name="q99" value="d"> 95 % podatkov leži znotraj ±2σ</label>
+</fieldset>
+<!-- 100 | Pravilno: d | Vir: 24.YB Visualisation, drsnica 9 -->
+<fieldset>
+<legend>100. Kateri graf je običajno eden prvih, s katerim preverimo, ali je obnašanje procesa stabilno?</legend>
+<label><input type="radio" name="q100" value="a"> Stolpični diagram</label>
+<label><input type="radio" name="q100" value="b"> Tortni diagram</label>
+<label><input type="radio" name="q100" value="c"> Paretov diagram</label>
+<label><input type="radio" name="q100" value="d"> Časovna vrsta (Time series plot)</label>
+</fieldset>
+<!-- 101 | Pravilno: a | Vir: 24.YB Visualisation, drsnica 10 -->
+<fieldset>
+<legend>101. Čemu je namenjen razsevni diagram (Scatter plot)?</legend>
+<label><input type="radio" name="q101" value="a"> Preučevanju razmerja med dvema zveznima spremenljivkama</label>
+<label><input type="radio" name="q101" value="b"> Zbiranju podatkov na mestu nastanka</label>
+<label><input type="radio" name="q101" value="c"> Prikazu kumulativnega deleža napak</label>
+<label><input type="radio" name="q101" value="d"> Primerjavi frekvenc med kategorijami</label>
+</fieldset>
+<!-- 102 | Pravilno: d | Vir: 24.YB Visualisation, drsnica 22 -->
+<fieldset>
+<legend>102. Kako se imenuje fizična kartica, ki je povezana z vsakim naročilom pri vizualnem toku?</legend>
+<label><input type="radio" name="q102" value="a"> Heijunka</label>
+<label><input type="radio" name="q102" value="b"> Andon</label>
+<label><input type="radio" name="q102" value="c"> Poka Yoke</label>
+<label><input type="radio" name="q102" value="d"> Kanban</label>
+</fieldset>
+<!-- 103 | Pravilno: c | Vir: 24.YB Visualisation, drsnica 14 -->
+<fieldset>
+<legend>103. Kaj od naštetega je v vizualnem upravljanju namenjeno preprečevanju napak?</legend>
+<label><input type="radio" name="q103" value="a"> Kanban</label>
+<label><input type="radio" name="q103" value="b"> Matrika znanj zaposlenih</label>
+<label><input type="radio" name="q103" value="c"> Poka Yoke</label>
+<label><input type="radio" name="q103" value="d"> Planska tabla</label>
+</fieldset>
+<!-- 104 | Pravilno: b | Vir: 24.YB Visualisation, drsnica 2 -->
+<fieldset>
+<legend>104. Pri čem nam pomagajo grafi pri grafični analizi?</legend>
+<label><input type="radio" name="q104" value="a"> Pri skrivanju osamelcev</label>
+<label><input type="radio" name="q104" value="b"> Pri razumevanju narave variacije in ločevanju signala od šuma</label>
+<label><input type="radio" name="q104" value="c"> Pri določanju cene izdelka</label>
+<label><input type="radio" name="q104" value="d"> Pri nadomeščanju meritev</label>
+</fieldset>
+<!-- 105 | Pravilno: a | Vir: 24.YB Visualisation, drsnica 3 -->
+<fieldset>
+<legend>105. Kako so razvrščeni stolpci v Paretovem diagramu?</legend>
+<label><input type="radio" name="q105" value="a"> Od največjega do najmanjšega</label>
+<label><input type="radio" name="q105" value="b"> Abecedno</label>
+<label><input type="radio" name="q105" value="c"> Od najmanjšega do največjega</label>
+<label><input type="radio" name="q105" value="d"> Naključno</label>
+</fieldset>
+<!-- 106 | Pravilno: b | Vir: 24.YB Visualisation, zapiski drsnice 3 -->
+<fieldset>
+<legend>106. Kam se v Paretovem diagramu postavi kategorija »Other«?</legend>
+<label><input type="radio" name="q106" value="a"> Na skrajno levo</label>
+<label><input type="radio" name="q106" value="b"> Na skrajno desno, tudi če je njena frekvenca večja od sosednjih</label>
+<label><input type="radio" name="q106" value="c"> Na sredino</label>
+<label><input type="radio" name="q106" value="d"> Kategorije Other ne prikažemo</label>
+</fieldset>
+<!-- 107 | Pravilno: c | Vir: 24.YB Visualisation, zapiski drsnice 3 -->
+<fieldset>
+<legend>107. Kdo je pravilo 80/20 uporabil v upravljanju kakovosti?</legend>
+<label><input type="radio" name="q107" value="a"> Jack Welch</label>
+<label><input type="radio" name="q107" value="b"> Vilfredo Pareto</label>
+<label><input type="radio" name="q107" value="c"> Joseph Juran</label>
+<label><input type="radio" name="q107" value="d"> Bill Smith</label>
+</fieldset>
+<!-- 108 | Pravilno: d | Vir: 24.YB Visualisation, drsnici 4–5 -->
+<fieldset>
+<legend>108. Katera grafa uporabimo za primerjavo števnih rezultatov ali frekvenc za dve ali več skupin?</legend>
+<label><input type="radio" name="q108" value="a"> Razsevni diagram ali časovno vrsto</label>
+<label><input type="radio" name="q108" value="b"> Škatlo z brki ali histogram</label>
+<label><input type="radio" name="q108" value="c"> Kontrolni list ali Kanban</label>
+<label><input type="radio" name="q108" value="d"> Stolpični diagram ali tortni diagram</label>
+</fieldset>
+<!-- 109 | Pravilno: c | Vir: 24.YB Visualisation, drsnica 5 -->
+<fieldset>
+<legend>109. Kateri mesec je imel v primeru zobozdravstvenih urgentnih obiskov največ obiskov?</legend>
+<label><input type="radio" name="q109" value="a"> April (447)</label>
+<label><input type="radio" name="q109" value="b"> December (499)</label>
+<label><input type="radio" name="q109" value="c"> Junij (512)</label>
+<label><input type="radio" name="q109" value="d"> Januar (216)</label>
+</fieldset>
+<!-- 110 | Pravilno: b | Vir: 24.YB Visualisation, drsnica 7 -->
+<fieldset>
+<legend>110. Kaj prikazujejo stolpci histograma pri prikazu »Density«?</legend>
+<label><input type="radio" name="q110" value="a"> Število opazovanj</label>
+<label><input type="radio" name="q110" value="b"> Odstotek</label>
+<label><input type="radio" name="q110" value="c"> Mediano</label>
+<label><input type="radio" name="q110" value="d"> Kumulativno vsoto</label>
+</fieldset>
+<!-- 111 | Pravilno: d | Vir: 24.YB Visualisation, zapiski drsnice 8 -->
+<fieldset>
+<legend>111. Kolikšen del vseh podatkov predstavlja škatla v škatli z brki (box plot)?</legend>
+<label><input type="radio" name="q111" value="a"> 100 %</label>
+<label><input type="radio" name="q111" value="b"> 75 %</label>
+<label><input type="radio" name="q111" value="c"> 25 %</label>
+<label><input type="radio" name="q111" value="d"> 50 %</label>
+</fieldset>
+<!-- 112 | Pravilno: a | Vir: 24.YB Visualisation, drsnica 11 -->
+<fieldset>
+<legend>112. Čemu je namenjen kontrolni list (check sheet)?</legend>
+<label><input type="radio" name="q112" value="a"> Preprostemu zbiranju in analizi podatkov o tem, kako pogosto se nekaj zgodi</label>
+<label><input type="radio" name="q112" value="b"> Prikazu korelacije</label>
+<label><input type="radio" name="q112" value="c"> Izračunu Cpk</label>
+<label><input type="radio" name="q112" value="d"> Nadzoru dela v teku</label>
+</fieldset>
+<!-- 113 | Pravilno: c | Vir: 24.YB Visualisation, drsnica 13 -->
+<fieldset>
+<legend>113. Kaj velja za vizualno upravljanje?</legend>
+<label><input type="radio" name="q113" value="a"> Gre za iskanje krivca</label>
+<label><input type="radio" name="q113" value="b"> Namenjeno je samo vodstvu</label>
+<label><input type="radio" name="q113" value="c"> Gre za izboljšave, ne za iskanje krivca</label>
+<label><input type="radio" name="q113" value="d"> Informacije so tajne</label>
+</fieldset>
+<!-- 114 | Pravilno: d | Vir: 24.YB Visualisation, drsnica 15 -->
+<fieldset>
+<legend>114. Kateri sta osnovni načeli vizualnega upravljanja?</legend>
+<label><input type="radio" name="q114" value="a"> Prikazati samo napake posameznikov</label>
+<label><input type="radio" name="q114" value="b"> Prikazati vse podatke podjetja</label>
+<label><input type="radio" name="q114" value="c"> Prikazati samo finančne podatke</label>
+<label><input type="radio" name="q114" value="d"> Prikazati informacije, ki se nanašajo na oddelek in na katere oddelek lahko vpliva</label>
+</fieldset>
+<!-- 115 | Pravilno: a | Vir: 24.YB Visualisation, drsnica 15 -->
+<fieldset>
+<legend>115. S katerim ciklom pri vizualnem upravljanju hitro popravimo odstopanja?</legend>
+<label><input type="radio" name="q115" value="a"> PDCA</label>
+<label><input type="radio" name="q115" value="b"> DMADV</label>
+<label><input type="radio" name="q115" value="c"> IDOV</label>
+<label><input type="radio" name="q115" value="d"> SIPOC</label>
+</fieldset>
+<!-- 116 | Pravilno: b | Vir: 24.YB Visualisation, drsnica 19 -->
+<fieldset>
+<legend>116. Kaj omogoča matrika znanj zaposlenih (skill matrix)?</legend>
+<label><input type="radio" name="q116" value="a"> Prikaz zalog</label>
+<label><input type="radio" name="q116" value="b"> Pregled potreb po usposabljanju in težav ob odsotnosti zaposlenih</label>
+<label><input type="radio" name="q116" value="c"> Napoved prodaje</label>
+<label><input type="radio" name="q116" value="d"> Izračun plač</label>
+</fieldset>
+<!-- 117 | Pravilno: a | Vir: 24.YB Visualisation, zapiski drsnice 17 -->
+<fieldset>
+<legend>117. Kaj naj bo po načelih organiziranega delovnega mesta na mizi?</legend>
+<label><input type="radio" name="q117" value="a"> Samo tisto, kar se uporablja vsak dan</label>
+<label><input type="radio" name="q117" value="b"> Osebni predmeti</label>
+<label><input type="radio" name="q117" value="c"> Arhiv dokumentov</label>
+<label><input type="radio" name="q117" value="d"> Vse orodje, ki bi ga kdaj lahko potrebovali</label>
+</fieldset>
+
+<h2>Statistična analiza – korelacija, regresija, hipoteze</h2>
+<!-- 118 | Pravilno: d | Vir: 33.YB Statistical Analysis, drsnica 4 -->
+<fieldset>
+<legend>118. Kdaj je korelacija po splošnem pravilu močna?</legend>
+<label><input type="radio" name="q118" value="a"> R = 0</label>
+<label><input type="radio" name="q118" value="b"> 0,5 &lt; |R| &lt; 0,8</label>
+<label><input type="radio" name="q118" value="c"> |R| &lt; 0,5</label>
+<label><input type="radio" name="q118" value="d"> |R| &gt; 0,8</label>
+</fieldset>
+<!-- 119 | Pravilno: c | Vir: 33.YB Statistical Analysis, drsnica 2 -->
+<fieldset>
+<legend>119. Katera trditev o korelaciji je resnična?</legend>
+<label><input type="radio" name="q119" value="a"> Korelacija vedno dokazuje vzročno-posledično zvezo</label>
+<label><input type="radio" name="q119" value="b"> Korelacijski koeficient leži med 0 in 100</label>
+<label><input type="radio" name="q119" value="c"> Korelacija ne pomeni, da obstaja vzročno-posledična zveza</label>
+<label><input type="radio" name="q119" value="d"> Korelacija se računa samo za kategorične podatke</label>
+</fieldset>
+<!-- 120 | Pravilno: b | Vir: 33.YB Statistical Analysis, drsnica 6 -->
+<fieldset>
+<legend>120. Kako se pri regresijski analizi imenuje neodvisna spremenljivka X?</legend>
+<label><input type="radio" name="q120" value="a"> Ostanek (Residual)</label>
+<label><input type="radio" name="q120" value="b"> Dejavnik (Factor)</label>
+<label><input type="radio" name="q120" value="c"> Posledica (Effect)</label>
+<label><input type="radio" name="q120" value="d"> Odziv (Response)</label>
+</fieldset>
+<!-- 121 | Pravilno: b | Vir: 33.YB Statistical Analysis, drsnica 11 -->
+<fieldset>
+<legend>121. Kaj vedno predpostavlja ničelna hipoteza (H0)?</legend>
+<label><input type="radio" name="q121" value="a"> Da razlika obstaja</label>
+<label><input type="radio" name="q121" value="b"> Da razlike ni</label>
+<label><input type="radio" name="q121" value="c"> Da so podatki normalno porazdeljeni</label>
+<label><input type="radio" name="q121" value="d"> Da je vzorec premajhen</label>
+</fieldset>
+<!-- 122 | Pravilno: d | Vir: 33.YB Statistical Analysis, drsnica 14 -->
+<fieldset>
+<legend>122. Katera stopnja zaupanja se pri intervalih zaupanja pogosto uporablja?</legend>
+<label><input type="radio" name="q122" value="a"> 99,99966 %</label>
+<label><input type="radio" name="q122" value="b"> 80 %</label>
+<label><input type="radio" name="q122" value="c"> 50 %</label>
+<label><input type="radio" name="q122" value="d"> 95 %</label>
+</fieldset>
+<!-- 123 | Pravilno: c | Vir: 33.YB Statistical Analysis, drsnica 3 -->
+<fieldset>
+<legend>123. Kaj meri Pearsonov korelacijski koeficient?</legend>
+<label><input type="radio" name="q123" value="a"> Povprečje vzorca</label>
+<label><input type="radio" name="q123" value="b"> Vzročno-posledično zvezo</label>
+<label><input type="radio" name="q123" value="c"> Moč linearne povezave med dvema spremenljivkama</label>
+<label><input type="radio" name="q123" value="d"> Sposobnost procesa</label>
+</fieldset>
+<!-- 124 | Pravilno: a | Vir: 33.YB Statistical Analysis, drsnica 4 -->
+<fieldset>
+<legend>124. Kaj pomeni korelacijski koeficient R = –1?</legend>
+<label><input type="radio" name="q124" value="a"> Popolno obratno (negativno) odvisnost</label>
+<label><input type="radio" name="q124" value="b"> Popolno premo (pozitivno) odvisnost</label>
+<label><input type="radio" name="q124" value="c"> Šibko korelacijo</label>
+<label><input type="radio" name="q124" value="d"> Popolno neodvisnost</label>
+</fieldset>
+<!-- 125 | Pravilno: a | Vir: 33.YB Statistical Analysis, drsnica 4 -->
+<fieldset>
+<legend>125. Kaj pomeni korelacijski koeficient R = 0?</legend>
+<label><input type="radio" name="q125" value="a"> Popolno neodvisnost</label>
+<label><input type="radio" name="q125" value="b"> Zmerno korelacijo</label>
+<label><input type="radio" name="q125" value="c"> Popolno obratno odvisnost</label>
+<label><input type="radio" name="q125" value="d"> Popolno premo odvisnost</label>
+</fieldset>
+<!-- 126 | Pravilno: c | Vir: 33.YB Statistical Analysis, drsnica 4 -->
+<fieldset>
+<legend>126. V katerem razponu je korelacija po splošnem pravilu zmerna?</legend>
+<label><input type="radio" name="q126" value="a"> |R| &lt; 0,5</label>
+<label><input type="radio" name="q126" value="b"> |R| = 1</label>
+<label><input type="radio" name="q126" value="c"> 0,5 &lt; |R| &lt; 0,8</label>
+<label><input type="radio" name="q126" value="d"> |R| &gt; 0,8</label>
+</fieldset>
+<!-- 127 | Pravilno: b | Vir: 33.YB Statistical Analysis, zapiski drsnice 5 -->
+<fieldset>
+<legend>127. Kaj mora obstajati med odzivom in dejavnikom, če želimo uporabiti regresijsko analizo?</legend>
+<label><input type="radio" name="q127" value="a"> Korelacija enaka 0</label>
+<label><input type="radio" name="q127" value="b"> Vzročnost oz. logična razlaga povezave</label>
+<label><input type="radio" name="q127" value="c"> Kategorični podatki</label>
+<label><input type="radio" name="q127" value="d"> Samo velik vzorec</label>
+</fieldset>
+<!-- 128 | Pravilno: d | Vir: 33.YB Statistical Analysis, drsnica 7 -->
+<fieldset>
+<legend>128. Kaj preučuje enostavna linearna regresija?</legend>
+<label><input type="radio" name="q128" value="a"> Povezavo med dvema kategoričnima spremenljivkama</label>
+<label><input type="radio" name="q128" value="b"> Razliko med dvema povprečjema</label>
+<label><input type="radio" name="q128" value="c"> Porazdelitev enega vzorca</label>
+<label><input type="radio" name="q128" value="d"> Povezavo med enim zveznim Y in enim zveznim X</label>
+</fieldset>
+<!-- 129 | Pravilno: d | Vir: 33.YB Statistical Analysis, drsnica 6 -->
+<fieldset>
+<legend>129. Kako se imenuje odvisna spremenljivka Y pri regresiji?</legend>
+<label><input type="radio" name="q129" value="a"> Šum (Noise)</label>
+<label><input type="radio" name="q129" value="b"> Vzorec (Sample)</label>
+<label><input type="radio" name="q129" value="c"> Dejavnik (Factor)</label>
+<label><input type="radio" name="q129" value="d"> Odziv (Response)</label>
+</fieldset>
+<!-- 130 | Pravilno: b | Vir: 33.YB Statistical Analysis, drsnica 10 -->
+<fieldset>
+<legend>130. Na katero variacijo želimo pri testiranju hipotez reagirati?</legend>
+<label><input type="radio" name="q130" value="a"> Samo na splošne vzroke</label>
+<label><input type="radio" name="q130" value="b"> Samo na nenavadno variacijo (posebni vzroki)</label>
+<label><input type="radio" name="q130" value="c"> Na nobeno variacijo</label>
+<label><input type="radio" name="q130" value="d"> Na vsako variacijo</label>
+</fieldset>
+<!-- 131 | Pravilno: c | Vir: 33.YB Statistical Analysis, drsnica 11 -->
+<fieldset>
+<legend>131. Kaj opisuje alternativna hipoteza (Ha)?</legend>
+<label><input type="radio" name="q131" value="a"> Da razlike ni</label>
+<label><input type="radio" name="q131" value="b"> Velikost vzorca</label>
+<label><input type="radio" name="q131" value="c"> Razliko, ki jo je treba preveriti in dokazati</label>
+<label><input type="radio" name="q131" value="d"> Stopnjo zaupanja</label>
+</fieldset>
+<!-- 132 | Pravilno: a | Vir: 33.YB Statistical Analysis, drsnica 11 -->
+<fieldset>
+<legend>132. Katero načelo ponazarja ničelno hipotezo?</legend>
+<label><input type="radio" name="q132" value="a"> »Nedolžen, dokler ni dokazana krivda«</label>
+<label><input type="radio" name="q132" value="b"> »Kupec ima vedno prav«</label>
+<label><input type="radio" name="q132" value="c"> »Več je bolje«</label>
+<label><input type="radio" name="q132" value="d"> »Prav v prvo«</label>
+</fieldset>
+<!-- 133 | Pravilno: a | Vir: 33.YB Statistical Analysis, drsnica 12 -->
+<fieldset>
+<legend>133. Kaj od naštetega je prednost testiranja hipotez?</legend>
+<label><input type="radio" name="q133" value="a"> Preprečuje subjektivne interpretacije</label>
+<label><input type="radio" name="q133" value="b"> Ne potrebuje podatkov</label>
+<label><input type="radio" name="q133" value="c"> Vedno zagotovi pravilno odločitev</label>
+<label><input type="radio" name="q133" value="d"> Odpravi vso variacijo</label>
+</fieldset>
+<!-- 134 | Pravilno: c | Vir: 33.YB Statistical Analysis, drsnica 14 -->
+<fieldset>
+<legend>134. Kaj velja za statistike vzorca, kot sta x̄ in s?</legend>
+<label><input type="radio" name="q134" value="a"> Ne potrebujejo intervala zaupanja</label>
+<label><input type="radio" name="q134" value="b"> So enake parametrom populacije</label>
+<label><input type="radio" name="q134" value="c"> So le ocenjevalniki, ne dejanske vrednosti populacije</label>
+<label><input type="radio" name="q134" value="d"> Se med vzorci ne spreminjajo</label>
+</fieldset>
+<!-- 135 | Pravilno: d | Vir: 33.YB Statistical Analysis, drsnica 13 -->
+<fieldset>
+<legend>135. S katerim simbolom označujemo standardni odklon populacije?</legend>
+<label><input type="radio" name="q135" value="a"> x̄</label>
+<label><input type="radio" name="q135" value="b"> µ</label>
+<label><input type="radio" name="q135" value="c"> s</label>
+<label><input type="radio" name="q135" value="d"> σ</label>
+</fieldset>
+
+<h2>Six Sigma – integracijski pogled (U1.E1)</h2>
+<!-- 136 | Pravilno: b | Vir: aqu.r3.u1.e1, str. 6 -->
+<fieldset>
+<legend>136. V katerem podjetju in katerega leta je nastal pristop Six Sigma (DMAIC)?</legend>
+<label><input type="radio" name="q136" value="a"> General Electric, 1996</label>
+<label><input type="radio" name="q136" value="b"> Motorola, 1986</label>
+<label><input type="radio" name="q136" value="c"> Toyota, 1950</label>
+<label><input type="radio" name="q136" value="d"> Ford, 1913</label>
+</fieldset>
+<!-- 137 | Pravilno: c | Vir: aqu.r3.u1.e1, str. 8 -->
+<fieldset>
+<legend>137. Palice imajo povprečno dolžino 10 cm in standardni odklon 1 cm. Koliko je vrednost Z za palico dolžine 13 cm?</legend>
+<label><input type="radio" name="q137" value="a"> 0,3</label>
+<label><input type="radio" name="q137" value="b"> 1,3</label>
+<label><input type="radio" name="q137" value="c"> 3</label>
+<label><input type="radio" name="q137" value="d"> 13</label>
+</fieldset>
+<!-- 138 | Pravilno: a | Vir: aqu.r3.u1.e1, str. 8; aqu.r3.u3.e1, str. 16 -->
+<fieldset>
+<legend>138. Kateri vrednosti ustrezata 6σ procesu ob upoštevanju premika za 1,5σ?</legend>
+<label><input type="radio" name="q138" value="a"> Cpk = 2,0 in Ppk = 1,5</label>
+<label><input type="radio" name="q138" value="b"> Cpk = 1,0 in Ppk = 0,5</label>
+<label><input type="radio" name="q138" value="c"> Cpk = 1,5 in Ppk = 2,0</label>
+<label><input type="radio" name="q138" value="d"> Cpk = 1,33 in Ppk = 1,0</label>
+</fieldset>
+<!-- 139 | Pravilno: b | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>139. V katero fazo DMAIC standard ISO 13053-2 uvršča 5S Housekeeping?</legend>
+<label><input type="radio" name="q139" value="a"> Definiraj (Define)</label>
+<label><input type="radio" name="q139" value="b"> Izboljšaj (Improve)</label>
+<label><input type="radio" name="q139" value="c"> Kontroliraj (Control)</label>
+<label><input type="radio" name="q139" value="d"> Analiziraj (Analyze)</label>
+</fieldset>
+<!-- 140 | Pravilno: d | Vir: aqu.r3.u1.e1, str. 6 -->
+<fieldset>
+<legend>140. Kdo je leta 1996 uvedel Six Sigma v General Electric (»The GE Way«)?</legend>
+<label><input type="radio" name="q140" value="a"> Bill Smith</label>
+<label><input type="radio" name="q140" value="b"> Mikel Harry</label>
+<label><input type="radio" name="q140" value="c"> Bob Galvin</label>
+<label><input type="radio" name="q140" value="d"> Jack Welch</label>
+</fieldset>
+<!-- 141 | Pravilno: c | Vir: aqu.r3.u1.e1, str. 6 -->
+<fieldset>
+<legend>141. Koliko je Motoroli prinesla vpeljava Six Sigma v prvih štirih letih?</legend>
+<label><input type="radio" name="q141" value="a"> 16 milijard dolarjev</label>
+<label><input type="radio" name="q141" value="b"> 175 tisoč dolarjev</label>
+<label><input type="radio" name="q141" value="c"> Več kot 2,2 milijardi dolarjev</label>
+<label><input type="radio" name="q141" value="d"> Nič</label>
+</fieldset>
+<!-- 142 | Pravilno: a | Vir: aqu.r3.u1.e1, str. 8 -->
+<fieldset>
+<legend>142. Za koliko se po oceni »na palec« proces v času premakne?</legend>
+<label><input type="radio" name="q142" value="a"> Za približno 1,5σ</label>
+<label><input type="radio" name="q142" value="b"> Proces se ne premakne</label>
+<label><input type="radio" name="q142" value="c"> Za približno 0,5σ</label>
+<label><input type="radio" name="q142" value="d"> Za približno 3σ</label>
+</fieldset>
+<!-- 143 | Pravilno: d | Vir: aqu.r3.u1.e1, str. 9 -->
+<fieldset>
+<legend>143. Koliko ppm napak ustreza stopnji 4σ?</legend>
+<label><input type="radio" name="q143" value="a"> 3,4</label>
+<label><input type="radio" name="q143" value="b"> 233</label>
+<label><input type="radio" name="q143" value="c"> 66.810</label>
+<label><input type="radio" name="q143" value="d"> 6.210</label>
+</fieldset>
+<!-- 144 | Pravilno: b | Vir: aqu.r3.u1.e1, str. 9 -->
+<fieldset>
+<legend>144. Koliko ppm napak ustreza stopnji 5σ?</legend>
+<label><input type="radio" name="q144" value="a"> 6.210</label>
+<label><input type="radio" name="q144" value="b"> 233</label>
+<label><input type="radio" name="q144" value="c"> 3,4</label>
+<label><input type="radio" name="q144" value="d"> 0,02</label>
+</fieldset>
+<!-- 145 | Pravilno: a | Vir: aqu.r3.u1.e1, str. 9 -->
+<fieldset>
+<legend>145. Kolikšen delež izdelkov je pri 6σ procesu znotraj specifikacij?</legend>
+<label><input type="radio" name="q145" value="a"> 99,99966 %</label>
+<label><input type="radio" name="q145" value="b"> 68 %</label>
+<label><input type="radio" name="q145" value="c"> 95 %</label>
+<label><input type="radio" name="q145" value="d"> 99,7 %</label>
+</fieldset>
+<!-- 146 | Pravilno: c | Vir: aqu.r3.u1.e1, str. 9 -->
+<fieldset>
+<legend>146. Ali lahko projekt, ki proces izboljša z 1σ na 4σ, še vedno imenujemo projekt Six Sigma?</legend>
+<label><input type="radio" name="q146" value="a"> Ne, ker ni dosežena stopnja 6σ</label>
+<label><input type="radio" name="q146" value="b"> Samo, če ga vodi Master Black Belt</label>
+<label><input type="radio" name="q146" value="c"> Da, ker je dosežena pomembna izboljšava</label>
+<label><input type="radio" name="q146" value="d"> Ne, ker je 4σ preslabo</label>
+</fieldset>
+<!-- 147 | Pravilno: d | Vir: aqu.r3.u1.e1, str. 10 -->
+<fieldset>
+<legend>147. Kaj je cilj DfSS (Design for Six Sigma)?</legend>
+<label><input type="radio" name="q147" value="a"> Zmanjšanje števila zaposlenih</label>
+<label><input type="radio" name="q147" value="b"> Povečanje zalog</label>
+<label><input type="radio" name="q147" value="c"> Izboljšanje obstoječih procesov z DMAIC</label>
+<label><input type="radio" name="q147" value="d"> Lansiranje izdelka brez napak in predvidljiva zanesljivost</label>
+</fieldset>
+<!-- 148 | Pravilno: b | Vir: aqu.r3.u1.e1, str. 11 -->
+<fieldset>
+<legend>148. Kaj naredi metoda QFD (razvoj funkcij kakovosti)?</legend>
+<label><input type="radio" name="q148" value="a"> Določi takt</label>
+<label><input type="radio" name="q148" value="b"> Zahteve kupca pretvori v merljive spremenljivke na vseh ravneh</label>
+<label><input type="radio" name="q148" value="c"> Nariše špagetni diagram</label>
+<label><input type="radio" name="q148" value="d"> Izračuna Cpk</label>
+</fieldset>
+<!-- 149 | Pravilno: c | Vir: aqu.r3.u1.e1, str. 11 -->
+<fieldset>
+<legend>149. Kaj omogoča Design FMEA?</legend>
+<label><input type="radio" name="q149" value="a"> Merjenje sposobnosti procesa v proizvodnji</label>
+<label><input type="radio" name="q149" value="b"> Izbiro projektnega vodje</label>
+<label><input type="radio" name="q149" value="c"> Analizo funkcij zasnove in kartiranje možnih napak v razvoju novega izdelka</label>
+<label><input type="radio" name="q149" value="d"> Izračun DPMO</label>
+</fieldset>
+<!-- 150 | Pravilno: d | Vir: aqu.r3.u1.e1, str. 11 -->
+<fieldset>
+<legend>150. S čim se ukvarja inženirstvo zanesljivosti (krivulja kopalne kadi)?</legend>
+<label><input type="radio" name="q150" value="a"> Z zbiranjem glasu kupca</label>
+<label><input type="radio" name="q150" value="b"> Z izračunom takta</label>
+<label><input type="radio" name="q150" value="c"> Z organizacijo delovnega mesta</label>
+<label><input type="radio" name="q150" value="d"> S preučevanjem in optimiranjem zanesljivosti sistema ali komponente</label>
+</fieldset>
+<!-- 151 | Pravilno: a | Vir: aqu.r3.u1.e1, str. 13 -->
+<fieldset>
+<legend>151. Kdaj je bila ustanovljena Lean Six Sigma Academy (LSSA)?</legend>
+<label><input type="radio" name="q151" value="a"> Septembra 2009</label>
+<label><input type="radio" name="q151" value="b"> Leta 1996</label>
+<label><input type="radio" name="q151" value="c"> Leta 1986</label>
+<label><input type="radio" name="q151" value="d"> Leta 2015</label>
+</fieldset>
+<!-- 152 | Pravilno: b | Vir: aqu.r3.u1.e1, str. 13 -->
+<fieldset>
+<legend>152. Kaj opisuje standard ISO 13053-2?</legend>
+<label><input type="radio" name="q152" value="a"> Certifikacijo pasov</label>
+<label><input type="radio" name="q152" value="b"> Orodja in tehnike, ki se uporabljajo v posameznih fazah DMAIC</label>
+<label><input type="radio" name="q152" value="c"> Design for Six Sigma</label>
+<label><input type="radio" name="q152" value="d"> Metodologijo DMAIC</label>
+</fieldset>
+<!-- 153 | Pravilno: d | Vir: aqu.r3.u1.e1, str. 15 -->
+<fieldset>
+<legend>153. Česa standard ISO 13053-1 NE pokriva?</legend>
+<label><input type="radio" name="q153" value="a"> Izboljšav obstoječih procesov</label>
+<label><input type="radio" name="q153" value="b"> Faz DMAIC</label>
+<label><input type="radio" name="q153" value="c"> Vlog v projektih Six Sigma</label>
+<label><input type="radio" name="q153" value="d"> Design for Six Sigma, reinženiringa procesov in certifikacije</label>
+</fieldset>
+<!-- 154 | Pravilno: b | Vir: aqu.r3.u1.e1, str. 16 -->
+<fieldset>
+<legend>154. Kateri nivo Bloomove taksonomije sprašuje »ali lahko slušatelj razloči med različnimi deli«?</legend>
+<label><input type="radio" name="q154" value="a"> Uporaba</label>
+<label><input type="radio" name="q154" value="b"> Analiza</label>
+<label><input type="radio" name="q154" value="c"> Poznavanje</label>
+<label><input type="radio" name="q154" value="d"> Sinteza</label>
+</fieldset>
+<!-- 155 | Pravilno: c | Vir: aqu.r3.u1.e1, str. 17 -->
+<fieldset>
+<legend>155. Koliko enot, učnih elementov in kriterijev uspešnosti obsega nabor znanj LSSA za Yellow Belt?</legend>
+<label><input type="radio" name="q155" value="a"> 4 enote, 14 elementov in 30 kriterijev</label>
+<label><input type="radio" name="q155" value="b"> 8 enot, 20 elementov in 100 kriterijev</label>
+<label><input type="radio" name="q155" value="c"> 7 enot, 17 učnih elementov in 50 kriterijev</label>
+<label><input type="radio" name="q155" value="d"> 5 enot, 10 elementov in 20 kriterijev</label>
+</fieldset>
+<!-- 156 | Pravilno: a | Vir: aqu.r3.u1.e1, str. 16 -->
+<fieldset>
+<legend>156. Kaj je kriterij uspešnosti v naboru znanj LSSA?</legend>
+<label><input type="radio" name="q156" value="a"> Opis minimalnega nivoja uspešnosti, ki ga mora udeleženec izkazati</label>
+<label><input type="radio" name="q156" value="b"> Seznam aktivnosti na delovnem mestu</label>
+<label><input type="radio" name="q156" value="c"> Število ur usposabljanja</label>
+<label><input type="radio" name="q156" value="d"> Ime pasu</label>
+</fieldset>
+<!-- 157 | Pravilno: c | Vir: aqu.r3.u1.e1, str. 19 -->
+<fieldset>
+<legend>157. Kateri nivo zrelosti procesov po ISO 13053 pomeni, da so vsi procesi vodeni s kazalniki?</legend>
+<label><input type="radio" name="q157" value="a"> Nivo 3 – Definiran</label>
+<label><input type="radio" name="q157" value="b"> Nivo 5 – Optimiran</label>
+<label><input type="radio" name="q157" value="c"> Nivo 4 – Kvantitativno voden</label>
+<label><input type="radio" name="q157" value="d"> Nivo 2 – Voden</label>
+</fieldset>
+<!-- 158 | Pravilno: a | Vir: aqu.r3.u1.e1, str. 19 -->
+<fieldset>
+<legend>158. Na katerem nivoju zrelosti procesi v organizaciji niso opisani?</legend>
+<label><input type="radio" name="q158" value="a"> Nivo 1 – Začetni</label>
+<label><input type="radio" name="q158" value="b"> Nivo 2 – Voden</label>
+<label><input type="radio" name="q158" value="c"> Nivo 3 – Definiran</label>
+<label><input type="radio" name="q158" value="d"> Nivo 4 – Kvantitativno voden</label>
+</fieldset>
+<!-- 159 | Pravilno: b | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>159. V katero fazo DMAIC standard ISO 13053-2 uvršča Takt time in Cycle time?</legend>
+<label><input type="radio" name="q159" value="a"> Measure</label>
+<label><input type="radio" name="q159" value="b"> Define</label>
+<label><input type="radio" name="q159" value="c"> Control</label>
+<label><input type="radio" name="q159" value="d"> Improve</label>
+</fieldset>
+<!-- 160 | Pravilno: d | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>160. V katero fazo DMAIC standard ISO 13053-2 uvršča FMEA in analizo temeljnih vzrokov?</legend>
+<label><input type="radio" name="q160" value="a"> Improve</label>
+<label><input type="radio" name="q160" value="b"> Define</label>
+<label><input type="radio" name="q160" value="c"> Control</label>
+<label><input type="radio" name="q160" value="d"> Analyze</label>
+</fieldset>
+<!-- 161 | Pravilno: a | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>161. V katero fazo DMAIC standard ISO 13053-2 uvršča analizo merilnega sistema (MSA)?</legend>
+<label><input type="radio" name="q161" value="a"> Measure</label>
+<label><input type="radio" name="q161" value="b"> Analyze</label>
+<label><input type="radio" name="q161" value="c"> Define</label>
+<label><input type="radio" name="q161" value="d"> Control</label>
+</fieldset>
+<!-- 162 | Pravilno: d | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>162. V katero fazo DMAIC standard ISO 13053-2 uvršča načrtovanje eksperimentov (DOE)?</legend>
+<label><input type="radio" name="q162" value="a"> Define</label>
+<label><input type="radio" name="q162" value="b"> Control</label>
+<label><input type="radio" name="q162" value="c"> Measure</label>
+<label><input type="radio" name="q162" value="d"> Improve</label>
+</fieldset>
+<!-- 163 | Pravilno: b | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>163. V katero fazo DMAIC standard ISO 13053-2 uvršča Poka Yoke in kontrolni načrt?</legend>
+<label><input type="radio" name="q163" value="a"> Analyze</label>
+<label><input type="radio" name="q163" value="b"> Control</label>
+<label><input type="radio" name="q163" value="c"> Define</label>
+<label><input type="radio" name="q163" value="d"> Improve</label>
+</fieldset>
+<!-- 164 | Pravilno: c | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>164. V katero fazo DMAIC standard ISO 13053-2 uvršča VSM – trenutno stanje?</legend>
+<label><input type="radio" name="q164" value="a"> Control</label>
+<label><input type="radio" name="q164" value="b"> Improve</label>
+<label><input type="radio" name="q164" value="c"> Analyze</label>
+<label><input type="radio" name="q164" value="d"> Define</label>
+</fieldset>
+<!-- 165 | Pravilno: c | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>165. V katero fazo DMAIC standard ISO 13053-2 uvršča VSM – prihodnje stanje?</legend>
+<label><input type="radio" name="q165" value="a"> Measure</label>
+<label><input type="radio" name="q165" value="b"> Analyze</label>
+<label><input type="radio" name="q165" value="c"> Improve</label>
+<label><input type="radio" name="q165" value="d"> Define</label>
+</fieldset>
+<!-- 166 | Pravilno: b | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>166. V katero fazo DMAIC standard ISO 13053-2 uvršča Auditing?</legend>
+<label><input type="radio" name="q166" value="a"> Measure</label>
+<label><input type="radio" name="q166" value="b"> Control</label>
+<label><input type="radio" name="q166" value="c"> Define</label>
+<label><input type="radio" name="q166" value="d"> Analyze</label>
+</fieldset>
+<!-- 167 | Pravilno: a | Vir: aqu.r3.u1.e1, str. 20 (tabela ISO 13053-2) -->
+<fieldset>
+<legend>167. V katero fazo DMAIC standard ISO 13053-2 uvršča izračun DPMO/PPM in Cost of Poor Quality?</legend>
+<label><input type="radio" name="q167" value="a"> Define</label>
+<label><input type="radio" name="q167" value="b"> Improve</label>
+<label><input type="radio" name="q167" value="c"> Control</label>
+<label><input type="radio" name="q167" value="d"> Analyze</label>
+</fieldset>
+
+<h2>Vloge in odgovornosti (U1.E2)</h2>
+<!-- 168 | Pravilno: d | Vir: aqu.r3.u1.e2, str. 9; aqu.r3.u1.e1, str. 15 -->
+<fieldset>
+<legend>168. Koliko let izkušenj z izvajanjem projektov ima najmanj Master Black Belt?</legend>
+<label><input type="radio" name="q168" value="a"> 1 leto</label>
+<label><input type="radio" name="q168" value="b"> 10 let</label>
+<label><input type="radio" name="q168" value="c"> 2 leti</label>
+<label><input type="radio" name="q168" value="d"> 5 let</label>
+</fieldset>
+<!-- 169 | Pravilno: a | Vir: aqu.r3.u1.e2, str. 8 -->
+<fieldset>
+<legend>169. Kdo je lastnik problema in iniciator projektne listine?</legend>
+<label><input type="radio" name="q169" value="a"> Champion</label>
+<label><input type="radio" name="q169" value="b"> Green Belt</label>
+<label><input type="radio" name="q169" value="c"> Master Black Belt</label>
+<label><input type="radio" name="q169" value="d"> Yellow Belt</label>
+</fieldset>
+<!-- 170 | Pravilno: c | Vir: aqu.r3.u1.e2, str. 6 -->
+<fieldset>
+<legend>170. Kdo je predsednik projektnega odbora pri večjih projektih Lean Six Sigma?</legend>
+<label><input type="radio" name="q170" value="a"> Black Belt</label>
+<label><input type="radio" name="q170" value="b"> Dobavitelj</label>
+<label><input type="radio" name="q170" value="c"> Champion</label>
+<label><input type="radio" name="q170" value="d"> Uporabnik</label>
+</fieldset>
+<!-- 171 | Pravilno: d | Vir: aqu.r3.u1.e2, str. 6 -->
+<fieldset>
+<legend>171. Kdo je v projektnem odboru »Dobavitelj«?</legend>
+<label><input type="radio" name="q171" value="a"> Kupec izdelka</label>
+<label><input type="radio" name="q171" value="b"> Zunanji dobavitelj materiala</label>
+<label><input type="radio" name="q171" value="c"> Član tima Yellow Belt</label>
+<label><input type="radio" name="q171" value="d"> Notranji manager, ki dodeljuje vire projektu</label>
+</fieldset>
+<!-- 172 | Pravilno: b | Vir: aqu.r3.u1.e2, str. 9 -->
+<fieldset>
+<legend>172. Kaj pomeni japonska beseda Sensei?</legend>
+<label><input type="radio" name="q172" value="a"> Izboljšava</label>
+<label><input type="radio" name="q172" value="b"> Učitelj (dobesedno »oseba, rojena pred drugo«)</label>
+<label><input type="radio" name="q172" value="c"> Ustavitev procesa</label>
+<label><input type="radio" name="q172" value="d"> Potrata</label>
+</fieldset>
+<!-- 173 | Pravilno: d | Vir: aqu.r3.u1.e2, str. 10 -->
+<fieldset>
+<legend>173. Kaj je projektna listina?</legend>
+<label><input type="radio" name="q173" value="a"> Seznam vseh zaposlenih</label>
+<label><input type="radio" name="q173" value="b"> Matrika znanj</label>
+<label><input type="radio" name="q173" value="c"> Kontrolni list napak</label>
+<label><input type="radio" name="q173" value="d"> Pogodba, ki določa cilj, časovnico in proračun projekta</label>
+</fieldset>
+<!-- 174 | Pravilno: a | Vir: aqu.r3.u1.e2, str. 11 -->
+<fieldset>
+<legend>174. Koliko dni usposabljanja Six Sigma ima najmanj Black Belt?</legend>
+<label><input type="radio" name="q174" value="a"> 14 dni</label>
+<label><input type="radio" name="q174" value="b"> 8 dni</label>
+<label><input type="radio" name="q174" value="c"> 2 dni</label>
+<label><input type="radio" name="q174" value="d"> 30 dni</label>
+</fieldset>
+<!-- 175 | Pravilno: c | Vir: aqu.r3.u1.e2, str. 13 -->
+<fieldset>
+<legend>175. Koliko dni usposabljanja Six Sigma ima približno Green Belt?</legend>
+<label><input type="radio" name="q175" value="a"> 2 dni</label>
+<label><input type="radio" name="q175" value="b"> 1 dan</label>
+<label><input type="radio" name="q175" value="c"> 8 dni</label>
+<label><input type="radio" name="q175" value="d"> 14 dni</label>
+</fieldset>
+<!-- 176 | Pravilno: b | Vir: aqu.r3.u1.e2, str. 11 -->
+<fieldset>
+<legend>176. Koliko let izkušenj na projektih Six Sigma ima najmanj Black Belt?</legend>
+<label><input type="radio" name="q176" value="a"> 10 let</label>
+<label><input type="radio" name="q176" value="b"> 2 leti</label>
+<label><input type="radio" name="q176" value="c"> 1 leto</label>
+<label><input type="radio" name="q176" value="d"> 5 let</label>
+</fieldset>
+<!-- 177 | Pravilno: c | Vir: aqu.r3.u1.e2, str. 12 -->
+<fieldset>
+<legend>177. Kakšen je običajno obseg projekta Green Belt?</legend>
+<label><input type="radio" name="q177" value="a"> Samo strateški projekti vodstva</label>
+<label><input type="radio" name="q177" value="b"> Celotno podjetje</label>
+<label><input type="radio" name="q177" value="c"> Omejen na en oddelek, proces ali ekspertizo</label>
+<label><input type="radio" name="q177" value="d"> Čez več organizacij</label>
+</fieldset>
+<!-- 178 | Pravilno: b | Vir: aqu.r3.u1.e2, str. 14 -->
+<fieldset>
+<legend>178. Katere projekte izvajajo Orange Belti?</legend>
+<label><input type="radio" name="q178" value="a"> Kompleksne prebojne projekte čez več organizacij</label>
+<label><input type="radio" name="q178" value="b"> Projekte Kaizen in Lean ali manj zahtevne projekte Six Sigma</label>
+<label><input type="radio" name="q178" value="c"> Nobenih projektov</label>
+<label><input type="radio" name="q178" value="d"> Samo projekte DfSS</label>
+</fieldset>
+<!-- 179 | Pravilno: a | Vir: aqu.r3.u1.e2, str. 15 -->
+<fieldset>
+<legend>179. Kaj od naštetega je naloga Yellow in Orange Beltov?</legend>
+<label><input type="radio" name="q179" value="a"> Usposabljanje in uvajanje operaterjev</label>
+<label><input type="radio" name="q179" value="b"> Izbira prebojnih projektov</label>
+<label><input type="radio" name="q179" value="c"> Potrjevanje prihrankov</label>
+<label><input type="radio" name="q179" value="d"> Določanje strategije Six Sigma</label>
+</fieldset>
+<!-- 180 | Pravilno: d | Vir: aqu.r3.u1.e2, povzetek (OCR) -->
+<fieldset>
+<legend>180. Kdo lahko izvaja izobraževanje nižjih nivojev pasov?</legend>
+<label><input type="radio" name="q180" value="a"> Kdorkoli v organizaciji</label>
+<label><input type="radio" name="q180" value="b"> Samo Yellow Belti</label>
+<label><input type="radio" name="q180" value="c"> Samo zunanji izvajalci</label>
+<label><input type="radio" name="q180" value="d"> Le imetnik pasu višjega nivoja</label>
+</fieldset>
+<!-- 181 | Pravilno: b | Vir: aqu.r3.u1.e2, organigram (OCR) -->
+<fieldset>
+<legend>181. Koliko Green Beltov pride po organigramu (Harry &amp; Schroeder) na enega Black Belta?</legend>
+<label><input type="radio" name="q181" value="a"> Dvajset</label>
+<label><input type="radio" name="q181" value="b"> Dva</label>
+<label><input type="radio" name="q181" value="c"> Deset</label>
+<label><input type="radio" name="q181" value="d"> Eden</label>
+</fieldset>
+
+<h2>Življenjski cikel – DMAIC in DMADV (U2.E1)</h2>
+<!-- 182 | Pravilno: a | Vir: aqu.r3.u2.e1, str. 6 -->
+<fieldset>
+<legend>182. Za kaj stoji kratica DMADV?</legend>
+<label><input type="radio" name="q182" value="a"> Definiraj, Meri, Analiziraj, Načrtuj, Preveri</label>
+<label><input type="radio" name="q182" value="b"> Definiraj, Meri, Analiziraj, Izboljšaj, Kontroliraj</label>
+<label><input type="radio" name="q182" value="c"> Identificiraj, Načrtuj, Optimiziraj, Preveri</label>
+<label><input type="radio" name="q182" value="d"> Definiraj, Modeliraj, Analiziraj, Razvij, Validiraj</label>
+</fieldset>
+<!-- 183 | Pravilno: d | Vir: aqu.r3.u2.e1, str. 6 -->
+<fieldset>
+<legend>183. Za katere projekte se uporablja DMADV?</legend>
+<label><input type="radio" name="q183" value="a"> Za reševanje problemov v obstoječih procesih</label>
+<label><input type="radio" name="q183" value="b"> Samo za Kaizen</label>
+<label><input type="radio" name="q183" value="c"> Samo za administracijo</label>
+<label><input type="radio" name="q183" value="d"> Za preprečevanje problemov, razvoj in inovacije</label>
+</fieldset>
+<!-- 184 | Pravilno: c | Vir: aqu.r3.u2.e1, str. 6 -->
+<fieldset>
+<legend>184. Na podlagi česa se pogosto sprožijo projekti DMADV (projekti izogibanja tveganjem)?</legend>
+<label><input type="radio" name="q184" value="a"> Na podlagi analize Pareto</label>
+<label><input type="radio" name="q184" value="b"> Na podlagi kontrolnega lista</label>
+<label><input type="radio" name="q184" value="c"> Na podlagi rezultatov analize Design FMEA</label>
+<label><input type="radio" name="q184" value="d"> Na podlagi pritožbe kupca</label>
+</fieldset>
+<!-- 185 | Pravilno: d | Vir: aqu.r3.u2.e1, str. 9 -->
+<fieldset>
+<legend>185. Kaj lahko uporabimo v fazi Meri pri DMADV, ko še ni prototipa?</legend>
+<label><input type="radio" name="q185" value="a"> Špagetni diagram</label>
+<label><input type="radio" name="q185" value="b"> Paretov diagram</label>
+<label><input type="radio" name="q185" value="c"> Kontrolni list</label>
+<label><input type="radio" name="q185" value="d"> Simulacijo Monte Carlo</label>
+</fieldset>
+<!-- 186 | Pravilno: c | Vir: aqu.r3.u2.e1, str. 10 -->
+<fieldset>
+<legend>186. Kako se imenuje matematični model, ki opisuje relacije med vplivnimi dejavniki X in CTQ (Y)?</legend>
+<label><input type="radio" name="q186" value="a"> CTQ Flowdown</label>
+<label><input type="radio" name="q186" value="b"> Projektna listina</label>
+<label><input type="radio" name="q186" value="c"> Prenosna funkcija</label>
+<label><input type="radio" name="q186" value="d"> Kontrolni načrt</label>
+</fieldset>
+<!-- 187 | Pravilno: a | Vir: aqu.r3.u2.e1, str. 11 -->
+<fieldset>
+<legend>187. Katero orodje se poleg DOE uporablja v fazi Načrtuj pri DMADV za določitev optimalnih nastavitev?</legend>
+<label><input type="radio" name="q187" value="a"> Modeliranje odzivne površine</label>
+<label><input type="radio" name="q187" value="b"> Kano analiza</label>
+<label><input type="radio" name="q187" value="c"> 5S</label>
+<label><input type="radio" name="q187" value="d"> SIPOC</label>
+</fieldset>
+<!-- 188 | Pravilno: b | Vir: aqu.r3.u2.e1, str. 14 -->
+<fieldset>
+<legend>188. Kateri načrt je bolj smiseln za projekte Kaizen?</legend>
+<label><input type="radio" name="q188" value="a"> DMADV</label>
+<label><input type="radio" name="q188" value="b"> PDCA</label>
+<label><input type="radio" name="q188" value="c"> DMAIC s 14 koraki</label>
+<label><input type="radio" name="q188" value="d"> IDOV</label>
+</fieldset>
+<!-- 189 | Pravilno: b | Vir: aqu.r3.u2.e1, str. 14 -->
+<fieldset>
+<legend>189. Kateri je 2. korak v 14-koračnem načrtu DMAIC?</legend>
+<label><input type="radio" name="q189" value="a"> Implementacija kontrolne strategije</label>
+<label><input type="radio" name="q189" value="b"> Definicija napake</label>
+<label><input type="radio" name="q189" value="c"> Določitev optimalnih nastavitev</label>
+<label><input type="radio" name="q189" value="d"> Vrednotenje merilnega sistema</label>
+</fieldset>
+<!-- 190 | Pravilno: c | Vir: aqu.r3.u2.e1, str. 14 -->
+<fieldset>
+<legend>190. V kateri fazi DMAIC se definirajo metrike CTQ in validira merilni sistem?</legend>
+<label><input type="radio" name="q190" value="a"> Analiziraj</label>
+<label><input type="radio" name="q190" value="b"> Kontroliraj</label>
+<label><input type="radio" name="q190" value="c"> Meri</label>
+<label><input type="radio" name="q190" value="d"> Definiraj</label>
+</fieldset>
+<!-- 191 | Pravilno: d | Vir: aqu.r3.u2.e1, str. 15 -->
+<fieldset>
+<legend>191. Kaj se včasih izvede pred dejanskim začetkom kompletnega projekta DMAIC?</legend>
+<label><input type="radio" name="q191" value="a"> Celoten DMADV</label>
+<label><input type="radio" name="q191" value="b"> Analiza Kano</label>
+<label><input type="radio" name="q191" value="c"> Kontrolni načrt</label>
+<label><input type="radio" name="q191" value="d"> Kratek DMA</label>
+</fieldset>
+<!-- 192 | Pravilno: a | Vir: aqu.r3.u2.e1, str. 20 -->
+<fieldset>
+<legend>192. Kaj je namen dodatnega koraka Replikacije po DMAIC?</legend>
+<label><input type="radio" name="q192" value="a"> Iskanje drugih izdelkov ali procesov, ki imajo lahko korist od dosežkov</label>
+<label><input type="radio" name="q192" value="b"> Ponovitev istega projekta</label>
+<label><input type="radio" name="q192" value="c"> Kopiranje konkurence</label>
+<label><input type="radio" name="q192" value="d"> Ponovno merjenje izhodišča</label>
+</fieldset>
+<!-- 193 | Pravilno: d | Vir: aqu.r3.u2.e1, str. 17 -->
+<fieldset>
+<legend>193. Kaj se v Lean projektih izriše v fazi Analiziraj?</legend>
+<label><input type="radio" name="q193" value="a"> Karta prihodnjega stanja</label>
+<label><input type="radio" name="q193" value="b"> Kontrolni načrt</label>
+<label><input type="radio" name="q193" value="c"> Projektna listina</label>
+<label><input type="radio" name="q193" value="d"> Karta toka vrednosti ali špagetni diagram trenutnega stanja</label>
+</fieldset>
+<!-- 194 | Pravilno: b | Vir: aqu.r3.u2.e1, str. 19 -->
+<fieldset>
+<legend>194. Kaj je namen faze Kontroliraj?</legend>
+<label><input type="radio" name="q194" value="a"> Iskanje temeljnih vzrokov</label>
+<label><input type="radio" name="q194" value="b"> Ohranitev doseženih rezultatov</label>
+<label><input type="radio" name="q194" value="c"> Definicija problema</label>
+<label><input type="radio" name="q194" value="d"> Merjenje izhodišča</label>
+</fieldset>
+<!-- 195 | Pravilno: a | Vir: aqu.r3.u2.e1, OCR str. 12 in 20 -->
+<fieldset>
+<legend>195. Kaj se zgodi z projektom ob zaprtju DMADV ali DMAIC?</legend>
+<label><input type="radio" name="q195" value="a"> Projekt se formalno vrne Championu</label>
+<label><input type="radio" name="q195" value="b"> Projekt prevzame Yellow Belt</label>
+<label><input type="radio" name="q195" value="c"> Projekt se preda kupcu</label>
+<label><input type="radio" name="q195" value="d"> Projekt se nadaljuje brez konca</label>
+</fieldset>
+
+<h2>Zahteve – VOC, Kano, CTQ (U2.E2)</h2>
+<!-- 196 | Pravilno: c | Vir: aqu.r3.u2.e2, str. 11–13 -->
+<fieldset>
+<legend>196. Po modelu Kano je kamera na mobilnem telefonu primer:</legend>
+<label><input type="radio" name="q196" value="a"> lastnosti »mora biti«</label>
+<label><input type="radio" name="q196" value="b"> lastnosti »več je bolje«</label>
+<label><input type="radio" name="q196" value="c"> navduševalca</label>
+<label><input type="radio" name="q196" value="d"> nepomembne lastnosti</label>
+</fieldset>
+<!-- 197 | Pravilno: b | Vir: aqu.r3.u2.e2, str. 8 -->
+<fieldset>
+<legend>197. Kako imenujemo zahteve delničarjev, vodstva, zaposlenih in internih oddelkov?</legend>
+<label><input type="radio" name="q197" value="a"> Glas kupca (VOC)</label>
+<label><input type="radio" name="q197" value="b"> Glas poslovanja (VOB)</label>
+<label><input type="radio" name="q197" value="c"> Glas procesa (VOP)</label>
+<label><input type="radio" name="q197" value="d"> Kritično za kakovost (CTQ)</label>
+</fieldset>
+<!-- 198 | Pravilno: d | Vir: aqu.r3.u2.e2, str. 15 -->
+<fieldset>
+<legend>198. Katera orodja so primernejša, če so definirane lastnosti osredotočene na dobavo (CTD)?</legend>
+<label><input type="radio" name="q198" value="a"> Samo SPC</label>
+<label><input type="radio" name="q198" value="b"> Samo DOE</label>
+<label><input type="radio" name="q198" value="c"> Orodja Six Sigma</label>
+<label><input type="radio" name="q198" value="d"> Orodja Lean</label>
+</fieldset>
+<!-- 199 | Pravilno: c | Vir: aqu.r3.u2.e2, str. 6 -->
+<fieldset>
+<legend>199. S čim se začnejo projekti stalnih izboljšav, za razliko od običajnih projektov?</legend>
+<label><input type="radio" name="q199" value="a"> Z nakupom opreme</label>
+<label><input type="radio" name="q199" value="b"> Z rešitvijo, ne s problemom</label>
+<label><input type="radio" name="q199" value="c"> S problemom, ne z rešitvijo</label>
+<label><input type="radio" name="q199" value="d"> Z zaposlitvijo</label>
+</fieldset>
+<!-- 200 | Pravilno: a | Vir: aqu.r3.u2.e2, OCR str. 9 -->
+<fieldset>
+<legend>200. Kolikšen delež strank je po raziskavi po enkratni izgubi nad 100 € oddal novo naročilo?</legend>
+<label><input type="radio" name="q200" value="a"> 19 %</label>
+<label><input type="radio" name="q200" value="b"> 5 %</label>
+<label><input type="radio" name="q200" value="c"> 81 %</label>
+<label><input type="radio" name="q200" value="d"> 50 %</label>
+</fieldset>
+<!-- 201 | Pravilno: c | Vir: aqu.r3.u2.e2, str. 11 -->
+<fieldset>
+<legend>201. Po modelu Kano je »sodoben avtomobil mora imeti radio« primer:</legend>
+<label><input type="radio" name="q201" value="a"> navduševalca</label>
+<label><input type="radio" name="q201" value="b"> lastnosti »več je bolje«</label>
+<label><input type="radio" name="q201" value="c"> lastnosti »mora biti«</label>
+<label><input type="radio" name="q201" value="d"> nepomembne lastnosti</label>
+</fieldset>
+<!-- 202 | Pravilno: a | Vir: aqu.r3.u2.e2, str. 11 -->
+<fieldset>
+<legend>202. Po modelu Kano je hitrost računalnika primer:</legend>
+<label><input type="radio" name="q202" value="a"> lastnosti »več je bolje«</label>
+<label><input type="radio" name="q202" value="b"> lastnosti »mora biti«</label>
+<label><input type="radio" name="q202" value="c"> nepomembne lastnosti</label>
+<label><input type="radio" name="q202" value="d"> navduševalca</label>
+</fieldset>
+<!-- 203 | Pravilno: b | Vir: aqu.r3.u2.e2, str. 11 -->
+<fieldset>
+<legend>203. Kaj velja za navduševalce po modelu Kano?</legend>
+<label><input type="radio" name="q203" value="a"> Zadovoljstvo narašča linearno</label>
+<label><input type="radio" name="q203" value="b"> Ob prisotnosti zagotavljajo zadovoljstvo, odsotnost pa ne povzroča nezadovoljstva</label>
+<label><input type="radio" name="q203" value="c"> Njihova odsotnost vedno povzroči nezadovoljstvo</label>
+<label><input type="radio" name="q203" value="d"> So osnovne samoumevne potrebe</label>
+</fieldset>
+<!-- 204 | Pravilno: d | Vir: aqu.r3.u2.e2, str. 12 -->
+<fieldset>
+<legend>204. Kaj velja za pričakovanja kupcev glede na primer klimatske naprave v avtomobilu?</legend>
+<label><input type="radio" name="q204" value="a"> Vedno ostanejo navduševalci</label>
+<label><input type="radio" name="q204" value="b"> Kupci nimajo pričakovanj</label>
+<label><input type="radio" name="q204" value="c"> Nikoli se ne spreminjajo</label>
+<label><input type="radio" name="q204" value="d"> Spreminjajo se v času – navduševalec postane pričakovana lastnost</label>
+</fieldset>
+<!-- 205 | Pravilno: a | Vir: aqu.r3.u2.e2, str. 14 -->
+<fieldset>
+<legend>205. Kaj je CTS (Critical to Satisfaction)?</legend>
+<label><input type="radio" name="q205" value="a"> Lastnost izdelka ali storitve, ki je pomembna za kupca</label>
+<label><input type="radio" name="q205" value="b"> Standardni odklon</label>
+<label><input type="radio" name="q205" value="c"> Notranji strošek procesa</label>
+<label><input type="radio" name="q205" value="d"> Čas cikla</label>
+</fieldset>
+<!-- 206 | Pravilno: c | Vir: aqu.r3.u2.e2, str. 16 -->
+<fieldset>
+<legend>206. Kaj je zunanji CTQ (CTQext)?</legend>
+<label><input type="radio" name="q206" value="a"> Cena izdelka</label>
+<label><input type="radio" name="q206" value="b"> Metrika, ki jo merimo samo v procesu</label>
+<label><input type="radio" name="q206" value="c"> Merljiva in nedvoumna specifikacija, izpeljana iz glasu kupca</label>
+<label><input type="radio" name="q206" value="d"> Nejasna zahteva kupca v govorjenem jeziku</label>
+</fieldset>
+<!-- 207 | Pravilno: b | Vir: aqu.r3.u2.e2, str. 18 -->
+<fieldset>
+<legend>207. Kaj je interni CTQ (CTQint)?</legend>
+<label><input type="radio" name="q207" value="a"> Pritožba kupca</label>
+<label><input type="radio" name="q207" value="b"> Metrika, ki jo merimo pri svojem izdelku ali procesu za verifikacijo kakovosti</label>
+<label><input type="radio" name="q207" value="c"> Glas poslovanja</label>
+<label><input type="radio" name="q207" value="d"> Ime projekta</label>
+</fieldset>
+<!-- 208 | Pravilno: d | Vir: aqu.r3.u2.e2, str. 17 -->
+<fieldset>
+<legend>208. V kaj je bila v primeru prevedena zahteva kupca po hitri in pravočasni dobavi?</legend>
+<label><input type="radio" name="q208" value="a"> Toleranca ±2 %</label>
+<label><input type="radio" name="q208" value="b"> Izkoristek &gt; 98 %</label>
+<label><input type="radio" name="q208" value="c"> Temperatura &gt; 70 °C</label>
+<label><input type="radio" name="q208" value="d"> Pretočni čas 14 dni od naročila do dostave</label>
+</fieldset>
+<!-- 209 | Pravilno: a | Vir: aqu.r3.u2.e2, OCR str. 19 -->
+<fieldset>
+<legend>209. Kakšna je zahteva za temperaturo kave v primeru CTQ Flowdown kavarne?</legend>
+<label><input type="radio" name="q209" value="a"> Več kot 70 °C</label>
+<label><input type="radio" name="q209" value="b"> Natanko 90 °C</label>
+<label><input type="radio" name="q209" value="c"> Več kot 50 °C</label>
+<label><input type="radio" name="q209" value="d"> Manj kot 60 °C</label>
+</fieldset>
+<!-- 210 | Pravilno: c | Vir: aqu.r3.u2.e2, str. 20 -->
+<fieldset>
+<legend>210. Kaj mora vsebovati operativna definicija CTQ?</legend>
+<label><input type="radio" name="q210" value="a"> Samo ceno</label>
+<label><input type="radio" name="q210" value="b"> Seznam zaposlenih</label>
+<label><input type="radio" name="q210" value="c"> Karakteristiko, merilni postopek in zahteve za CTQ</label>
+<label><input type="radio" name="q210" value="d"> Samo ime kupca</label>
+</fieldset>
+<!-- 211 | Pravilno: d | Vir: aqu.r3.u2.e2, str. 19 -->
+<fieldset>
+<legend>211. Na koliko CTQ-jev naj se v idealnem primeru osredotoči projekt Lean Six Sigma?</legend>
+<label><input type="radio" name="q211" value="a"> Na nobenega</label>
+<label><input type="radio" name="q211" value="b"> Na vsaj deset</label>
+<label><input type="radio" name="q211" value="c"> Na vse, ki jih najdemo</label>
+<label><input type="radio" name="q211" value="d"> Na enega</label>
+</fieldset>
+
+<h2>Sposobnost in zmogljivost procesa (U3.E1)</h2>
+<!-- 212 | Pravilno: b | Vir: aqu.r3.u3.e1, str. 12–13 -->
+<fieldset>
+<legend>212. Kako je definiran indeks sposobnosti procesa Cp?</legend>
+<label><input type="radio" name="q212" value="a"> (x̄ – LSL) / 6σ</label>
+<label><input type="radio" name="q212" value="b"> (USL – LSL) / 6σ</label>
+<label><input type="radio" name="q212" value="c"> min(CpU, CpL)</label>
+<label><input type="radio" name="q212" value="d"> (USL – x̄) / 3σ</label>
+</fieldset>
+<!-- 213 | Pravilno: b | Vir: aqu.r3.u3.e1, str. 14 -->
+<fieldset>
+<legend>213. Kdaj je pri dvostranski toleranci Ppk enak Pp?</legend>
+<label><input type="radio" name="q213" value="a"> Ko je vzorec večji od 100</label>
+<label><input type="radio" name="q213" value="b"> Samo ko je proces centriran</label>
+<label><input type="radio" name="q213" value="c"> Ko je proces nestabilen</label>
+<label><input type="radio" name="q213" value="d"> Nikoli</label>
+</fieldset>
+<!-- 214 | Pravilno: c | Vir: aqu.r3.u3.e1, str. 7 -->
+<fieldset>
+<legend>214. Katera sta dva najpomembnejša vzroka za nesposobnost procesa?</legend>
+<label><input type="radio" name="q214" value="a"> Preveč zaposlenih in premalo strojev</label>
+<label><input type="radio" name="q214" value="b"> Premalo meritev in prekratek takt</label>
+<label><input type="radio" name="q214" value="c"> Prevelika varianca in necentrirana srednja vrednost</label>
+<label><input type="radio" name="q214" value="d"> Previsoki stroški in počasna dobava</label>
+</fieldset>
+<!-- 215 | Pravilno: d | Vir: aqu.r3.u3.e1, str. 9 -->
+<fieldset>
+<legend>215. Koliko podatkovnih točk običajno zberejo študije dolgoročne sposobnosti procesa?</legend>
+<label><input type="radio" name="q215" value="a"> 30–50</label>
+<label><input type="radio" name="q215" value="b"> 1000–2000</label>
+<label><input type="radio" name="q215" value="c"> 5–10</label>
+<label><input type="radio" name="q215" value="d"> 100–200</label>
+</fieldset>
+<!-- 216 | Pravilno: a | Vir: aqu.r3.u3.e1, str. 5 -->
+<fieldset>
+<legend>216. Kako je definirana sposobnost procesa?</legend>
+<label><input type="radio" name="q216" value="a"> Zmožnost procesa, da ustvarja izdelke, ki izpolnjujejo pričakovanja/specifikacije kupca</label>
+<label><input type="radio" name="q216" value="b"> Število izdelkov na uro</label>
+<label><input type="radio" name="q216" value="c"> Čas med dvema naročiloma</label>
+<label><input type="radio" name="q216" value="d"> Strošek procesa</label>
+</fieldset>
+<!-- 217 | Pravilno: a | Vir: aqu.r3.u3.e1, str. 5 -->
+<fieldset>
+<legend>217. Kaj mora veljati za proces, da lahko zanesljivo določimo njegovo sposobnost?</legend>
+<label><input type="radio" name="q217" value="a"> Proces mora biti stabilen</label>
+<label><input type="radio" name="q217" value="b"> Proces mora biti nestabilen</label>
+<label><input type="radio" name="q217" value="c"> Proces mora biti necentriran</label>
+<label><input type="radio" name="q217" value="d"> Proces mora imeti velik raztros</label>
+</fieldset>
+<!-- 218 | Pravilno: d | Vir: aqu.r3.u3.e1, str. 9 -->
+<fieldset>
+<legend>218. Iz česa izhaja lastna (kratkoročna) variabilnost procesa?</legend>
+<label><input type="radio" name="q218" value="a"> Iz posebnih vzrokov</label>
+<label><input type="radio" name="q218" value="b"> Iz napak merjenja</label>
+<label><input type="radio" name="q218" value="c"> Iz splošnih in posebnih vzrokov</label>
+<label><input type="radio" name="q218" value="d"> Iz splošnih vzrokov</label>
+</fieldset>
+<!-- 219 | Pravilno: c | Vir: aqu.r3.u3.e1, str. 9 -->
+<fieldset>
+<legend>219. Koliko podatkovnih točk običajno zberejo študije kratkoročne sposobnosti?</legend>
+<label><input type="radio" name="q219" value="a"> 100–200</label>
+<label><input type="radio" name="q219" value="b"> 1000</label>
+<label><input type="radio" name="q219" value="c"> 30–50</label>
+<label><input type="radio" name="q219" value="d"> 5–10</label>
+</fieldset>
+<!-- 220 | Pravilno: b | Vir: aqu.r3.u3.e1, str. 10 -->
+<fieldset>
+<legend>220. Kaj nam pove Ppk?</legend>
+<label><input type="radio" name="q220" value="a"> Kakšna bo sposobnost v prihodnosti pod statističnim nadzorom</label>
+<label><input type="radio" name="q220" value="b"> Kakšna je bila zmogljivost procesa v preteklosti</label>
+<label><input type="radio" name="q220" value="c"> Kolikšen je razpon</label>
+<label><input type="radio" name="q220" value="d"> Kakšen je takt</label>
+</fieldset>
+<!-- 221 | Pravilno: c | Vir: aqu.r3.u3.e1, str. 10 in 16 -->
+<fieldset>
+<legend>221. Kdaj uporabimo Pp in Ppk?</legend>
+<label><input type="radio" name="q221" value="a"> Samo pri vzorcih iz enega dne</label>
+<label><input type="radio" name="q221" value="b"> Samo pri enostranski toleranci</label>
+<label><input type="radio" name="q221" value="c"> Ko delamo s celotno populacijo oz. podatki iz daljšega obdobja</label>
+<label><input type="radio" name="q221" value="d"> Nikoli</label>
+</fieldset>
+<!-- 222 | Pravilno: b | Vir: aqu.r3.u3.e1, str. 12 -->
+<fieldset>
+<legend>222. Kaj Cpk upošteva poleg raztrosa?</legend>
+<label><input type="radio" name="q222" value="a"> Število zaposlenih</label>
+<label><input type="radio" name="q222" value="b"> Položaj procesa (centriranost) glede na specificirani meji</label>
+<label><input type="radio" name="q222" value="c"> Čas cikla</label>
+<label><input type="radio" name="q222" value="d"> Ceno izdelka</label>
+</fieldset>
+<!-- 223 | Pravilno: a | Vir: aqu.r3.u3.e1, str. 13 -->
+<fieldset>
+<legend>223. Kaj nakazuje razlika med Cp in Cpk?</legend>
+<label><input type="radio" name="q223" value="a"> Priložnost za izboljšavo s centriranjem procesa</label>
+<label><input type="radio" name="q223" value="b"> Da je proces popoln</label>
+<label><input type="radio" name="q223" value="c"> Prevelik vzorec</label>
+<label><input type="radio" name="q223" value="d"> Napako merjenja</label>
+</fieldset>
+<!-- 224 | Pravilno: d | Vir: aqu.r3.u3.e1, str. 12–13 (formule) -->
+<fieldset>
+<legend>224. USL = 10,5, LSL = 9,5, povprečje = 10,2, σ = 0,1. Koliko je Cpk?</legend>
+<label><input type="radio" name="q224" value="a"> 2,33</label>
+<label><input type="radio" name="q224" value="b"> 0,7</label>
+<label><input type="radio" name="q224" value="c"> 1,67</label>
+<label><input type="radio" name="q224" value="d"> 1,0</label>
+</fieldset>
+<!-- 225 | Pravilno: b | Vir: aqu.r3.u3.e1, str. 12–13 (formule) -->
+<fieldset>
+<legend>225. USL = 10,5, LSL = 9,5, σ = 0,1. Koliko je Cp?</legend>
+<label><input type="radio" name="q225" value="a"> 1,0</label>
+<label><input type="radio" name="q225" value="b"> 1,67</label>
+<label><input type="radio" name="q225" value="c"> 3,33</label>
+<label><input type="radio" name="q225" value="d"> 0,6</label>
+</fieldset>
+<!-- 226 | Pravilno: d | Vir: aqu.r3.u3.e1, str. 17 -->
+<fieldset>
+<legend>226. Katera vrednost Ppk je po tabeli potrebna, da pridemo pod 3,4 ppm?</legend>
+<label><input type="radio" name="q226" value="a"> 0,8</label>
+<label><input type="radio" name="q226" value="b"> 1,0</label>
+<label><input type="radio" name="q226" value="c"> 2,0</label>
+<label><input type="radio" name="q226" value="d"> 1,5</label>
+</fieldset>
+<!-- 227 | Pravilno: c | Vir: aqu.r3.u3.e1, str. 17 -->
+<fieldset>
+<legend>227. Koliko ppm ustreza Ppk = 0,8 (stopnja 4σ)?</legend>
+<label><input type="radio" name="q227" value="a"> 233</label>
+<label><input type="radio" name="q227" value="b"> 66.807</label>
+<label><input type="radio" name="q227" value="c"> 6.210</label>
+<label><input type="radio" name="q227" value="d"> 3,4</label>
+</fieldset>
+<!-- 228 | Pravilno: a | Vir: aqu.r3.u3.e1, str. 8 -->
+<fieldset>
+<legend>228. Na kaj je usmerjen prvi korak projektov Six Sigma pri izboljšanju sposobnosti?</legend>
+<label><input type="radio" name="q228" value="a"> Na centriranje procesa</label>
+<label><input type="radio" name="q228" value="b"> Na zmanjšanje števila meritev</label>
+<label><input type="radio" name="q228" value="c"> Na povečanje raztrosa</label>
+<label><input type="radio" name="q228" value="d"> Na razširitev toleranc</label>
+</fieldset>
+<!-- 229 | Pravilno: c | Vir: aqu.r3.u3.e1, str. 16 -->
+<fieldset>
+<legend>229. Kaj pomeni »sposobnost« v primerjavi z »zmogljivostjo« procesa?</legend>
+<label><input type="radio" name="q229" value="a"> Sta popolnoma enaka pojma</label>
+<label><input type="radio" name="q229" value="b"> Sposobnost je dolgoročna, zmogljivost kratkoročna</label>
+<label><input type="radio" name="q229" value="c"> Sposobnost je kaj proces zmore (Cp), zmogljivost kaj dejansko počne (Ppk)</label>
+<label><input type="radio" name="q229" value="d"> Sposobnost upošteva posebne vzroke</label>
+</fieldset>
+
+<div class="vrstica">
+  <label for="preveri" class="gumb gumb-preveri">Preveri odgovore</label>
+  <input type="reset" class="gumb" value="Ponastavi">
+  <span class="rezultat"></span>
+</div>
+</form>
+</body>
+</html>
