@@ -209,10 +209,11 @@ function initOptions() {
     const r = await send({ type: 'popup:showLabel' });
     status(r && r.ok ? 'Answers shown in the bottom-right corner.' : '✗ ' + ((r && r.error) || 'Nothing to show'), r && r.ok ? 'ok' : 'err');
   });
-  for (const key of ['viewportOnly', 'notifications', 'flash', 'answerLabel']) {
+  for (const key of ['autoApply', 'viewportOnly', 'notifications', 'flash', 'answerLabel', 'labelCompact']) {
     const cb = $('#' + key);
-    cb.checked = key === 'answerLabel' ? settings[key] !== false : !!settings[key];
-    cb.addEventListener('change', () => { settings[key] = cb.checked; persistSettings(); });
+    cb.checked = key === 'answerLabel' || key === 'autoApply' ? settings[key] !== false : !!settings[key];
+    // save right away: the popup closes (and drops pending debounced saves) as soon as you click the page
+    cb.addEventListener('change', () => { settings[key] = cb.checked; saveSettings(settings); });
   }
   const op = $('#labelOpacity');
   const opVal = $('#labelOpacityVal');
@@ -467,7 +468,8 @@ async function main() {
     await Promise.all([saveSettings(settings), saveContexts(contexts)]);
     status('Solving…');
     const r = await send({ type: 'popup:command', command: 'solve-quiz' });
-    if (r && r.ok) status(`✓ Answered ${r.applied.applied}/${r.total}${r.applied.failed ? ` · ${r.applied.failed} failed to click` : ''}`, 'ok');
+    if (r && r.ok && r.applied.notApplied) status(`✓ Solved ${r.total} — not applied (answers box / Re-apply)`, 'ok');
+    else if (r && r.ok) status(`✓ Answered ${r.applied.applied}/${r.total}${r.applied.failed ? ` · ${r.applied.failed} failed to click` : ''}`, 'ok');
     else status('✗ ' + ((r && r.error) || 'Failed'), 'err');
     loadLastRun();
     loadHistory();

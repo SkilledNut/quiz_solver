@@ -211,8 +211,8 @@ async function notify(tabId, msg, type = 'info', opts = {}) {
 async function showLabel(tabId, items, opts = {}) {
   const settings = await getSettings();
   const { show, ...rest } = opts;
-  // box off or notifications off: fill it silently, Alt+Shift+H brings it up
-  const hidden = !show && (settings.answerLabel === false || !settings.notifications);
+  // box option off: fill it silently, Alt+Shift+H brings it up (notifications only control the toasts)
+  const hidden = !show && settings.answerLabel === false;
   try {
     await chrome.scripting.executeScript({
       target: { tabId, frameIds: [0] },
@@ -296,7 +296,8 @@ async function solve(tabId) {
     }
 
     const url = await tabUrl(tabId);
-    await History.push(url, { label: 'Before solve', state: await snapshot(tabId) });
+    const autoApply = settings.autoApply !== false; // off: only show the answers, don't click anything
+    if (autoApply) await History.push(url, { label: 'Before solve', state: await snapshot(tabId) });
 
     const modeLabel = settings.mode === 'llm' ? resolveLLMConfig(settings).label : 'algorithm';
     await notify(tabId, `Solving ${questions.length} question${questions.length > 1 ? 's' : ''} (${modeLabel})…`, 'busy', { sticky: true });
@@ -311,13 +312,13 @@ async function solve(tabId) {
       if (!sel || !sel.length) return;
       desired.push({ qid: q.qid, qh: q.qh, oh: q.oh, nk: q.nk, ord: q.ord, qText: q.text.slice(0, 200), optKeys: q.optKeys, sel, selKeys: sel.map((j) => q.optKeys[j]) });
     });
-    const applied = await restore(tabId, desired, settings);
+    const applied = autoApply ? await restore(tabId, desired, settings) : { applied: 0, failed: 0, notApplied: true };
     const failedSet = new Set(applied.failedQids || []);
     await showLabel(tabId, questions.map((q, i) => labelItem(i + 1, q, result.answers[i],
       !result.answers[i] || !result.answers[i].length ? 'unparsed' : failedSet.has(q.qid) ? 'not selected' : '')));
 
-    await History.push(url, { label: `Solved (${settings.mode === 'llm' ? 'LLM' : 'algorithm'})`, state: await snapshot(tabId), solved: true });
-    await History.recordSolve(url, { mode: settings.mode, state: desired });
+    if (autoApply) await History.push(url, { label: `Solved (${settings.mode === 'llm' ? 'LLM' : 'algorithm'})`, state: await snapshot(tabId), solved: true });
+    await History.recordSolve(url, { mode: settings.mode, state: desired }); // Re-apply (Alt+Shift+L) can still select them later
 
     const secs = ((Date.now() - t0) / 1000).toFixed(1);
     const unanswered = questions.length - desired.length;
@@ -329,12 +330,15 @@ async function solve(tabId) {
       }
     });
 
-    const lines = [`✓ ${applied.applied}/${questions.length} answered · ${secs}s${result.meta && result.meta.searched ? ' · web' : ''}`];
+    const lines = [autoApply
+      ? `✓ ${applied.applied}/${questions.length} answered · ${secs}s${result.meta && result.meta.searched ? ' · web' : ''}`
+      : `✓ ${desired.length}/${questions.length} solved, not selected (Alt+Shift+L applies them) · ${secs}s${result.meta && result.meta.searched ? ' · web' : ''}`];
     if (unanswered) lines.push(`${unanswered} without a parsable answer`);
     if (applied.trustedClicks) lines.push(`${applied.trustedClicks} answer(s) needed real clicks`);
     if (applied.failed) lines.push(`${applied.failed} could not be clicked` + (applied.trustedAvailable ? '' : ' — answers are in the box; real clicks: popup → Options'));
     if (applied.trustedError) lines.push(applied.trustedError);
-    if (questions.length <= 30) lines.push(formatAnswers(result.answers, questions));
+    // answer list in the toast only when the box may pop up too (box option off = no answers shown until Alt+Shift+H)
+    if (questions.length <= 30 && settings.answerLabel !== false) lines.push(formatAnswers(result.answers, questions));
     await notify(tabId, lines.join('\n'), applied.failed || unanswered ? 'info' : 'ok', { duration: 5000 });
     return { ok: true, applied, total: questions.length };
   } catch (e) {

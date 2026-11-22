@@ -4,11 +4,13 @@ import { PRESETS } from './presets.js';
 export const DEFAULT_SETTINGS = {
   mode: 'llm',                 // 'llm' | 'algorithm'
   activeContextId: null,       // null = no knowledge base
+  autoApply: true,             // select the answers on the page after solving (off: only show them)
   viewportOnly: false,         // only questions currently inside the viewport
   notifications: true,         // on-page toast
   flash: false,                // briefly outline the options that were selected
   answerLabel: true,           // persistent answers box in the bottom-right corner
   labelOpacity: 100,           // answers box opacity in % (full on hover)
+  labelCompact: false,         // minimal answers box: one horizontally scrolling line of "1 B  2 A,C ..."
   clickMode: 'auto',           // 'auto' | 'trusted' | 'synthetic' (trusted needs the optional "debugger" permission)
   llm: {
     provider: 'gemini',

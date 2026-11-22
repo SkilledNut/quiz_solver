@@ -1373,7 +1373,8 @@
     labelRoot = null,
     labelItems = [],
     labelCollapsed = false,
-    labelOpacity = 1;
+    labelOpacity = 1,
+    labelCompact = false;
   const toOpacity = (s) =>
     Math.min(1, Math.max(0.05, ((s && s.labelOpacity) ?? 100) / 100));
   function applyLabelOpacity() {
@@ -1387,13 +1388,17 @@
         .get("settings")
         .then(({ settings }) => {
           labelOpacity = toOpacity(settings);
+          labelCompact = !!(settings && settings.labelCompact);
           applyLabelOpacity();
+          if (labelRoot) renderLabel();
         })
         .catch(() => {});
       chrome.storage.onChanged.addListener((ch, area) => {
         if (area === "local" && ch.settings) {
           labelOpacity = toOpacity(ch.settings.newValue);
+          labelCompact = !!(ch.settings.newValue && ch.settings.newValue.labelCompact);
           applyLabelOpacity();
+          if (labelRoot) renderLabel();
         }
       });
     } catch {
@@ -1405,6 +1410,25 @@
     const head = labelRoot.querySelector(".count");
     list.textContent = "";
     head.textContent = labelItems.length ? `(${labelItems.length})` : "";
+    const box = labelRoot.querySelector(".box");
+    box.classList.toggle("compact", labelCompact);
+    labelHost.style.bottom = labelCompact ? "0" : "16px"; // compact sits flush on the screen edge
+    if (labelCompact) {
+      // one horizontal line: "1 B  2 A,C  3 ?" (no hover tooltip, stays discreet)
+      for (const it of labelItems) {
+        const chip = document.createElement("span");
+        chip.className = "chip" + (it.warn ? " warn" : "");
+        const n = document.createElement("span");
+        n.className = "n";
+        n.textContent = it.n;
+        const l = document.createElement("b");
+        l.textContent = it.letters || "?";
+        chip.append(n, l);
+        list.append(chip);
+      }
+      box.classList.remove("collapsed");
+      return;
+    }
     for (const it of labelItems) {
       const row = document.createElement("div");
       row.className = "row" + (it.warn ? " warn" : "");
@@ -1461,10 +1485,28 @@
         .n{color:#64748b;min-width:22px;text-align:right}
         b{color:#16a34a;min-width:28px}
         .tx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;color:#334155}
-        .warn b{color:#d97706}.w{color:#d97706;white-space:nowrap;font-size:11px}</style>
+        .warn b{color:#d97706}.w{color:#d97706;white-space:nowrap;font-size:11px}
+        .compact{width:auto;max-width:min(340px,calc(100vw - 32px));border-radius:6px 6px 0 0;border-bottom:0}
+        .compact .hd{display:none}
+        .compact .list{display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;max-height:none;padding:3px 7px;
+             white-space:nowrap;scrollbar-width:none}
+        .compact .list::-webkit-scrollbar{display:none}
+        .chip{display:inline-flex;gap:3px;align-items:baseline;flex:none;cursor:default}
+        .chip .n,.chip b{min-width:0;text-align:left}
+        .compact,.compact .chip b,.compact .chip.warn b{color:#111}.compact .chip .n{color:#888}.compact .chip b{font-weight:normal}</style>
         <div class="box"><div class="hd"><span class="ttl">Answers</span><span class="count"></span>
         <button class="min" title="Collapse / expand">▾</button><button class="x" title="Close">✕</button></div>
         <div class="list"></div></div>`;
+      // compact strip: vertical mouse wheel scrolls it sideways
+      labelRoot.querySelector(".list").addEventListener(
+        "wheel",
+        (e) => {
+          if (!labelCompact || !e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+          e.currentTarget.scrollLeft += e.deltaY;
+          e.preventDefault();
+        },
+        { passive: false },
+      );
       labelRoot.querySelector(".hd").addEventListener("click", (e) => {
         if (e.target.closest(".x")) {
           labelHost.style.display = "none";

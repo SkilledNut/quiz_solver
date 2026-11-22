@@ -231,14 +231,20 @@
         </h2>
         <div class="sec-body" hidden>
           <label class="switch"
+            ><input type="checkbox" id="autoApply" />
+            <span
+              >Automatically apply answers (off: only show them, Re-apply /
+              Alt+Shift+L selects them later)</span
+            ></label
+          >
+          <label class="switch"
             ><input type="checkbox" id="viewportOnly" />
             <span>Only questions currently in the viewport</span></label
           >
           <label class="switch"
             ><input type="checkbox" id="notifications" />
             <span
-              >On-page notifications (off also keeps the answers box hidden
-              until Alt+Shift+H)</span
+              >On-page notifications (status toasts; errors always show)</span
             ></label
           >
           <label class="switch"
@@ -250,6 +256,13 @@
             <span
               >Pop up the answers box after solving (off: Alt+Shift+H shows
               it)</span
+            ></label
+          >
+          <label class="switch"
+            ><input type="checkbox" id="labelCompact" />
+            <span
+              >Minimal answers box (one scrolling line: question number +
+              answer letter)</span
             ></label
           >
           <label class="stack"

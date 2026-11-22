@@ -40,8 +40,8 @@ letters and option text, e.g. `1. A,C  Red · Blue`.
 - Manual-mode answers are added as `M1`, `M2`, ….
 - **Alt+Shift+H** toggles the box on any page, including when the focus is inside an iframe. If the box
   isn't on the page yet, toggling it on shows the last answers.
-- With *On-page notifications* off (or *Pop up the answers box* off), the box is filled in after every solve
-  but stays hidden until you press Alt+Shift+H. Manual-mode notifications are hidden too; errors still show.
+- With *Pop up the answers box* off, the box is filled in after every solve but stays hidden until you press
+  Alt+Shift+H. *On-page notifications* off hides the status toasts (manual mode too); errors still show.
 - **Opacity** slider in Options fades the box; it goes back to full opacity while you hover it.
 - Click the header to collapse the box; ✕ closes it.
 - To bring the box back after a page reload: popup → *Last run* → **Show answers on page**.
