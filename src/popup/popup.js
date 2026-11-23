@@ -375,6 +375,7 @@ const SHORTCUT_HELP = [
   { name: 'reapply-answers', fallback: 'Alt+Shift+L', title: 'Re-apply solved answers', detail: 'Puts the last solved answers back after you changed them by hand (works after reload too).' },
   { group: 'Answers box (bottom right)' },
   { name: 'toggle-label', fallback: 'Alt+Shift+H', title: 'Show / hide answers box', detail: 'Shows the last answers if the box isn’t there yet.' },
+  { key: 'Alt+Shift+↑ / ↓', title: 'Answers box opacity', detail: '±10% per press (5–100%), same as the Options slider.' },
   { key: 'click box header', title: 'Collapse / expand the box', detail: '✕ closes it.' },
   { group: 'Popup' },
   { key: 'click toolbar icon', title: 'Open this popup' }

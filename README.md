@@ -57,6 +57,7 @@ Detect the questions on the page and select the answers, plus undo, redo and re-
 | **Redo** | `Alt+Shift+Y` |
 | **Re-apply** solved answers | `Alt+Shift+L` |
 | Show / hide answers box | `Alt+Shift+H` |
+| Answers box opacity ±10% | `Alt+Shift+↑` / `Alt+Shift+↓` |
 
 These keys are handled inside the page (Chrome allows only four default extension shortcuts), so they work
 on any page loaded after the extension was installed and only while the quiz solver is enabled. Tabs that were

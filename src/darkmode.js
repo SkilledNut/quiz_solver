@@ -87,6 +87,13 @@ html[${DATA_ATTR}="on"] [style*="background-image"] {
         e.repeat
       )
         return;
+      // Alt+Shift+Up/Down: answers box opacity +/- 10% (saved to settings, the box follows live)
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        e.preventDefault();
+        e.stopPropagation();
+        changeLabelOpacity(e.key === "ArrowUp" ? 10 : -10);
+        return;
+      }
       // e.key follows the keyboard layout (QWERTZ: Y/Z swapped); fall back to the physical key
       const k = (
         e.key && e.key.length === 1 ? e.key : (e.code || "").replace(/^Key/, "")
@@ -99,6 +106,22 @@ html[${DATA_ATTR}="on"] [style*="background-image"] {
     },
     true,
   );
+
+  function changeLabelOpacity(delta) {
+    try {
+      chrome.storage.local
+        .get("settings")
+        .then(({ settings = {} }) => {
+          const cur = settings.labelOpacity ?? 100;
+          const next = Math.min(100, Math.max(5, Math.round((cur + delta) / 5) * 5));
+          if (next === cur) return;
+          return chrome.storage.local.set({ settings: { ...settings, labelOpacity: next } });
+        })
+        .catch(() => {});
+    } catch {
+      /* extension reloaded */
+    }
+  }
 
   function sendHotkey(command) {
     try {
